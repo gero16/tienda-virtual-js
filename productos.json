@@ -1,0 +1,190 @@
+[
+    {
+    "id": 1,
+    "name": "Remera Pav",
+    "price": 850,
+    "image": "img/remera.webp",
+    "category": "remeras",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 2,
+    "name": "Remera Savana",
+    "price": 1950,
+    "image": "img/remera2.webp",
+    "category": "remeras",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 3,
+    "name": "Remera Calafate ",
+    "price": 250,
+    "image": "img/remera3.webp",
+    "category": "remeras",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 4,
+    "name": "Remera under",
+    "price": 3500,
+    "image": "img/remera4.webp",
+    "category": "remeras",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 5,
+    "name": "Mochila oxido",
+    "price": 3500,
+    "image": "img/mochila.webp",
+    "category": "mochilas",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 6,
+    "name": "Mochila Andes",
+    "price": 2350,
+    "image": "img/mochila2.jpg",
+    "category": "mochilas",
+    "stock": 0,
+    "cantidad": 0
+  },{
+    "id": 7,
+    "name": "Mochila Tulum",
+    "price": 550,
+    "image": "img/mochila3.jpg",
+    "category": "mochilas",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 8,
+    "name": "Mochila Tundra",
+    "price": 550,
+    "image": "img/mochila4.jpg",
+    "category": "mochilas",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 9,
+    "name": "´Short Calvin",
+    "price": 2350,
+    "image": "img/short.webp",
+    "category": "bermudas",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 10,
+    "name": "Short Liso",
+    "price": 790,
+    "image": "img/short2.webp",
+    "category": "bermudas",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 12,
+    "name": "Pantalon Mykonos",
+    "price": 1950,
+    "image": "img/pantalon2.webp",
+    "category": "pantalones",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 13,
+    "name": "Medias Clasicas",
+    "price": 1950,
+    "image": "img/medias.webp",
+    "category": "medias",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 14,
+    "name": "Gorro Rambo",
+    "price": 1950,
+    "image": "img/gorro3.jpg",
+    "category": "gorros",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 15,
+    "name": "Gorro",
+    "price": 1950,
+    "image": "img/gorro.webp",
+    "category": "gorros",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 16,
+    "name": "Medias Cutt",
+    "price": 1950,
+    "image": "img/medias2.jpg",
+    "category": "medias",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 17,
+    "name": "Champion Linder",
+    "price": 1950,
+    "image": "img/champion2.webp",
+    "category": "championes",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 18,
+    "name": "Champion Mike",
+    "price": 1950,
+    "image": "img/champion3.webp",
+    "category": "championes",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 19,
+    "name": "Pantalon Trigger",
+    "price": 1950,
+    "image": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0d80911fe0e24f8eb67fac3800e8bee0_9366/Pantalon_Tiro_21_Negro_GM7336_21_model.jpg",
+    "category": "pantalones",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 20,
+    "name": "Champion Classic",
+    "price": 1950,
+    "image": "img/champion5.webp",
+    "category": "championes",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 23,
+    "name": "Championes Luxu",
+    "price": 2350,
+    "image": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/cdae3463884c4cd4aeb5af460017b5b3_9366/Zapatilla_Grand_Court_Cloudfoam_Lifestyle_Court_Comfort_Blanco_HP2534_01_standard.jpg",
+    "category": "championes",
+    "stock": 3400,
+    "cantidad": 1
+  },{
+    "id": 24,
+    "name": "Gorro T-Rex",
+    "price": 530,
+    "image": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/73bf8bd331df4219953fae5500af89d8_9366/Gorro_Terrex_Multisport_Burgundy_HK2600_01_standard.jpg",
+    "category": "gorros",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 25,
+    "name": "Pantalon Culin",
+    "price": 2000,
+    "image": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/b83c816988544ea5addbae3e011827ef_9366/Pantalon_entrenamiento_Real_Madrid_Condivo_22_Blanco_HG4010_21_model.jpg",
+    "category": "pantalones",
+    "stock": 1000,
+    "cantidad": 0
+  },{
+    "id": 26,
+    "name": "Bermuda Movi",
+    "price": 1250,
+    "image": "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/08f64bf2a0214b8ebb24af9e01241874_9366/Pantalon_corto_X-City_Reflect_At_Night_Blanco_HM8451_HM1.jpg",
+    "category": "bermudas",
+    "stock": 1000,
+    "cantidad": 0
+  }
+
+
+]
+
