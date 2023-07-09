@@ -21,16 +21,14 @@ function checkoutHTML(product) {
 
     let subTotalPedido =  price * cantidad;
     pedidoHTML += `
-  <div class="producto-pedido">
-  <img class="imagen-pedido" src="${image}" alt="foto-${name}" />
-  <div class="info-pedido">
-    <h3 class="nombre-pedido">${name}</h3>
-    <p class="cantidad-pedido">${cantidad}</p>
-    <p class="precio-pedido">$${subTotalPedido}</p>
-  </div>
-</div>
-
-  `;
+      <div class="producto-pedido">
+        <img class="imagen-pedido" src="${image}" alt="foto-${name}" />
+        <div class="info-pedido">
+          <h3 class="nombre-pedido">${name}</h3>
+          <p class="cantidad-pedido">${cantidad}</p>
+          <p class="precio-pedido">$${subTotalPedido}</p>
+        </div>
+      </div> `;
     divPedido.innerHTML = pedidoHTML;
 
     // Promocion
