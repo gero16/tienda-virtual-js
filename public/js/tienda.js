@@ -100,6 +100,7 @@ function getProductosLocal() {
   promise.then(function () {
     console.log(datosProductosAgregados)
     if (datosProductosAgregados) { datosProductosAgregados.forEach((product) => {
+      ids = JSON.parse(localStorage.getItem(`productoIds`)) 
       // Construir html del carrito - Que viene de localStorage
       articulos++; // antes lo tenia abajo y me funcionaba mal
       const imgCarrito = document.createElement("img");
@@ -144,7 +145,7 @@ function getProductosLocal() {
       btnBorrar.textContent = "x";
 
       const productoCarrito = document.createElement("div");
-      productoCarrito.classList.add("producto-carrito");
+      productoCarrito.className = `producto-carrito producto-${product.id}`;
       productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
       productosCarrito.append(productoCarrito);
 
@@ -263,24 +264,21 @@ function addCarritoHTML(product) {
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
 function borrarCarrito() {
-  const btnBorrar = document.querySelectorAll('.btn-borrar')
-  const productoEliminar = document.querySelectorAll('.producto-carrito')
+  const btnBorrar = document.querySelectorAll('.btn-borrar') 
   for (let i = 0; i <= btnBorrar.length - 1; i++) {
     btnBorrar[i].addEventListener('click', (e) => {
-      let id = parseInt(e.target.dataset.id)
-      console.log(e.target.dataset.id)
+      let id = (e.target.dataset.id).split("-")
+      
+      e.target.parentNode.parentNode.removeChild(document.querySelector(`.producto-${id[1]}`))
+      JSON.parse(localStorage.removeItem(`producto-${id[1]}`))
 
-      let itemsActualizar = JSON.parse(localStorage.getItem(`producto-${id}`))
-      let itemsNuevo = itemsActualizar.filter((element) => element.id !== id)
-      console.log(itemsNuevo)
-      localStorage.setItem('Productos', JSON.stringify(itemsNuevo))
+      const getIds = JSON.parse(localStorage.getItem("productoIds"))
+      ids = getIds.filter((elementId) => elementId !== Number(id[1]))
+      localStorage.removeItem("productoIds")
+      localStorage.setItem(`productoIds`, JSON.stringify(ids));
 
-      productoEliminar[i].innerHTML = ''
       articulos--
-      if (articulos == -1) {
-        numbCompras.textContent = 0
-      }
-
+      if (articulos == -1) numbCompras.textContent = 0
       numbCompras.textContent = articulos
       console.log(numbCompras)
     })
@@ -355,7 +353,13 @@ filtroPrecios.addEventListener("click", (e) => {
 window.onload = async () => {
   await fetchProducts()
   // await addCarritoHTML()
-  getProductosLocal()
+  new Promise (function(resolve, reject) {
+    resolve(getProductosLocal())
+    reject(console.log("Error"))
+  })
+  .then(function() {
+    borrarCarrito()
+  })
 
   // Agregar Unidades del Carrito
 
@@ -391,6 +395,5 @@ window.onload = async () => {
     })
   }
 
-  // Los tengo que agarrar aca que ya existen
-  borrarCarrito()
+
 }
