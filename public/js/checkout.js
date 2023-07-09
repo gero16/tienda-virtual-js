@@ -7,12 +7,23 @@ window.onload = () => {
   checkoutHTML();
 };
 
-let ids = [];
+let ids = JSON.parse(localStorage.getItem(`productoIds`)) 
+let datosProductosAgregados = []
+
+function getProductosLocal() {
+  ids.forEach(id => {
+      let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
+      if(data) datosProductosAgregados.push(data)
+  })
+  
+  return datosProductosAgregados;
+}
+
 
 function checkoutHTML(product) {
   let pedidoHTML = "";
 
-  const datosProductos = JSON.parse(localStorage.getItem("Productos"));
+  const datosProductos = getProductosLocal()
   datosProductos.forEach((product) => {
     console.log(product);
     let { name, image, price, id, cantidad } = product;
