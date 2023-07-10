@@ -98,68 +98,88 @@ function getProductosLocal() {
   })
 
   promise.then(function () {
-    console.log(datosProductosAgregados)
-    if (datosProductosAgregados) { datosProductosAgregados.forEach((product) => {
-      ids = JSON.parse(localStorage.getItem(`productoIds`)) 
-      // Construir html del carrito - Que viene de localStorage
-      articulos++; // antes lo tenia abajo y me funcionaba mal
-      const imgCarrito = document.createElement("img");
-      imgCarrito.src = product.image;
-      imgCarrito.classList.add("img-comprar");
+    if (datosProductosAgregados) { 
+      datosProductosAgregados.forEach((product) => {
+        ids = JSON.parse(localStorage.getItem(`productoIds`)) 
+        // Construir html del carrito - Que viene de localStorage
+        articulos++; // antes lo tenia abajo y me funcionaba mal
 
-      // Seccion Contenido
-      const divContenidoCarrito = document.createElement("div");
-      divContenidoCarrito.classList.add(
-        "div-contenido-carrito",
-        "centrar-texto"
-      );
-      const nombreProducto = document.createElement("p");
-      nombreProducto.textContent = product.name;
-      const precioProducto = document.createElement("p");
-      precioProducto.textContent = product.price;
-      divContenidoCarrito.append(nombreProducto, precioProducto);
+        // element, classname, content, dataset, src 
+        const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", product.image)
+      
+        // Seccion Contenido
+        const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
+        const nombreProducto = createElementHtml("p", [], product.name)
+        const precioProducto = createElementHtml("p", [], product.price)
+        divContenidoCarrito.append(nombreProducto, precioProducto);
 
-      // Seccion Stock
-      const divStock = document.createElement("div");
-      divStock.classList.add("stock");
-      const spanRestar = document.createElement("span");
-      spanRestar.textContent = "-";
-      spanRestar.classList.add("restar");
-      const spanSumar = document.createElement("span");
-      spanSumar.textContent = "+";
-      spanSumar.classList.add("sumar");
+        // Seccion Stock
+        const divStock = createElementHtml("div", ["stock"])
+        const spanRestar = createElementHtml("span", ["restar"], "-")
+        const spanSumar = createElementHtml("span", ["sumar"], "+")
+        const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${product.id}`)
+        inputCarrito.value = product.cantidad;
+        divStock.append(spanRestar, inputCarrito, spanSumar);
+        divContenidoCarrito.append(divStock);
 
-      const inputCarrito = document.createElement("input");
-      inputCarrito.dataset.id = `input-${product.id}`
-      inputCarrito.classList.add("input-carrito", "centrar-texto");
-  
-      inputCarrito.value = product.cantidad;
-      divStock.append(spanRestar, inputCarrito, spanSumar);
+        // Borrar
+        const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${product.id}`)
+    
+        const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
+        productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
+        productosCarrito.append(productoCarrito);
 
-      divContenidoCarrito.append(divStock);
-
-      // Borrar
-      const btnBorrar = document.createElement("span");
-      btnBorrar.classList.add("btn-borrar");
-      btnBorrar.dataset.id =`borrar-${product.id}`
-      btnBorrar.textContent = "x";
-
-      const productoCarrito = document.createElement("div");
-      productoCarrito.className = `producto-carrito producto-${product.id}`;
-      productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
-      productosCarrito.append(productoCarrito);
-
-      // Me aparecen 2 producto-carrito's creados antes en el HTML
-      numbCompras.textContent = articulos;
-      subTotal.innerHTML = `$${sumaSub}`;
-    });
-  }
+        // Me aparecen 2 producto-carrito's creados antes en el HTML
+        numbCompras.textContent = articulos;
+        subTotal.innerHTML = `$${sumaSub}`;
+      });
+    }
 })
 
   return datosProductosAgregados;
 }
 
+///***  Crear el HTML del Carrito ***///
+function addCarritoHTML(product) {
+  const carritoVacio = document.querySelector('.carrito-vacio')
+  carritoVacio.innerHTML = ''
 
+  let { image, name, price, id, cantidad } = product
+  console.log(product)
+
+  // Caja Producto
+  const imgCarrito = document.createElement('img')
+  imgCarrito.src = `${image}`
+  imgCarrito.classList.add('img-comprar')
+
+  // Seccion Contenido
+  const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
+  const nombreProducto = createElementHtml("p", [], name)
+  const precioProducto = createElementHtml("p", [], price)
+  divContenidoCarrito.append(nombreProducto, precioProducto);
+
+  // Seccion Stock
+  const divStock = createElementHtml("div", ["stock"])
+  const spanRestar = createElementHtml("span", ["restar"], "-")
+  const spanSumar = createElementHtml("span", ["sumar"], "+")
+  const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${id}`)
+  inputCarrito.value = 1
+  divStock.append(spanRestar, inputCarrito, spanSumar)
+  divContenidoCarrito.append(divStock)
+
+  // Borrar
+  const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${id}`)
+  // Agregar img, y divs al producto-carrito
+  const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
+  productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
+  productosCarrito.append(productoCarrito);
+
+  articulos++
+  numbCompras.textContent = articulos
+
+  sumaSub = sumaSub + price;
+  subTotal.textContent = sumaSub;
+}
 
 ///***  Agregar productos al Carrito ***///
 function add(productId, price) {
@@ -196,74 +216,13 @@ function add(productId, price) {
     inputCarrito.value = getProductActualizar.cantidad;
    
     }
-  borrarCarrito();
+  borrarItemCarrito();
 }
 
-///***  Crear el HTML del Carrito ***///
-function addCarritoHTML(product) {
-  const carritoVacio = document.querySelector('.carrito-vacio')
-  carritoVacio.innerHTML = ''
 
-  let { image, name, price, id, cantidad } = product
-  console.log(product)
-
-  localStorage.length
-  // Caja Producto
-  const imgCarrito = document.createElement('img')
-  imgCarrito.src = `${image}`
-  imgCarrito.classList.add('img-comprar')
-
-  // Borrar
-  const btnBorrar = document.createElement('span')
-  btnBorrar.classList.add('btn-borrar')
-  btnBorrar.dataset.id = `borrar-${id}`;
-  btnBorrar.textContent = 'x'
-
-  // Seccion Contenido
-  const divContenidoCarrito = document.createElement('div')
-  divContenidoCarrito.classList.add('div-contenido-carrito', 'centrar-texto')
-  const nombreProducto = document.createElement('p')
-  nombreProducto.textContent = name
-  const precioProducto = document.createElement('p')
-  precioProducto.textContent = `$${price}`
-  divContenidoCarrito.append(nombreProducto, precioProducto)
-
-  // Seccion Stock
-  let divStock = document.createElement("div");
-  divStock.classList.add("stock");
-  let spanRestar = document.createElement("span");
-  spanRestar.textContent = "-";
-  spanRestar.dataset.id = `-${id}`;
-  spanRestar.classList.add("restar");
-  let spanSumar = document.createElement("span");
-  spanSumar.textContent = "+";
-  spanSumar.dataset.id = `+${id}`;
-  spanSumar.classList.add("sumar");
-  let inputCarrito = document.createElement('input')
-  inputCarrito.dataset.id = `input-${id}`
-  inputCarrito.classList.add('input-carrito', 'centrar-texto')
-  inputCarrito.value = 1
-  divStock.append(spanRestar, inputCarrito, spanSumar)
-  divContenidoCarrito.append(divStock)
-
-  // Agregar img, y divs al producto-carrito
-  let productoCarrito = document.createElement('div')
-  productoCarrito.classList.add('producto-carrito')
-  productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar)
-  productosCarrito.append(productoCarrito)
-
-  divComprar = document.createElement('div')
-  divComprar.classList.add('div-comprar')
-
-  articulos++
-  numbCompras.textContent = articulos
-
-  sumaSub = sumaSub + price;
-  subTotal.textContent = sumaSub;
-}
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
-function borrarCarrito() {
+function borrarItemCarrito() {
   const btnBorrar = document.querySelectorAll('.btn-borrar') 
   for (let i = 0; i <= btnBorrar.length - 1; i++) {
     btnBorrar[i].addEventListener('click', (e) => {
@@ -349,6 +308,23 @@ filtroPrecios.addEventListener("click", (e) => {
   });
 })
 
+function createElementHtml (element, classname, content, dataset, src) {
+  const elementoEtiqueta = document.createElement(`${element}`);
+
+  if(classname) {
+      classname.forEach(clase => {
+          elementoEtiqueta.className += `${clase} `
+      });
+  }
+
+  if(content) elementoEtiqueta.textContent =  content
+
+  if(dataset) elementoEtiqueta.dataset.id = `${dataset}`
+
+  if(src) elementoEtiqueta.src = src
+
+  return elementoEtiqueta
+}
 
 window.onload = async () => {
   await fetchProducts()
@@ -358,7 +334,7 @@ window.onload = async () => {
     reject(console.log("Error"))
   })
   .then(function() {
-    borrarCarrito()
+    borrarItemCarrito()
   })
 
   // Agregar Unidades del Carrito

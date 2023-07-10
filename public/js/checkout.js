@@ -15,7 +15,6 @@ function getProductosLocal() {
       let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
       if(data) datosProductosAgregados.push(data)
   })
-  
   return datosProductosAgregados;
 }
 
