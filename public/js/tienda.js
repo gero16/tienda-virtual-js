@@ -34,9 +34,6 @@ let total = 0;
 let sumaSub = 0;
 let articulos = 0;
 
-
-
-
 iconoCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'block'
 })
@@ -282,9 +279,12 @@ filtroCategorias.addEventListener("click", (e) => {
 });
 
 const filtroPrecios = document.querySelector(".precio-principal")
+let mostrarPrecio = document.querySelector("#mostrar-precio")
+console
 filtroPrecios.addEventListener("click", (e) => {
   const precioPrincipal = parseInt(e.target.value)
-
+  console.log(precioPrincipal)
+  mostrarPrecio.textContent = precioPrincipal
   filtradoHTML = " ";
 
   productList.forEach((elemento) => {
@@ -336,14 +336,6 @@ window.onload = async () => {
   .then(function() {
     borrarItemCarrito()
   })
-
-  // Agregar Unidades del Carrito
-
-  /*
-      Pregunta - Cada vez que yo ejecute este codigo por el sumar y restar  
-      tambien se estara ejecutando el fetchProducts y getProductosLocal? 
-      Probar con console.log - Crep qie estarian mejor afuera de esto
-  */
 
   const inputsCarrito = document.querySelectorAll(".input-carrito");
   const sumar = document.querySelectorAll(".sumar");
