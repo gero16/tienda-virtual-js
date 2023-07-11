@@ -51,9 +51,9 @@ async function fetchProducts() {
 
   productList = registros;
 
-  renderProductosHtml(registros)
-
   llenarIds()
+
+  return productList
 }
 
 // Construir HTML de los productos
@@ -63,14 +63,12 @@ function renderProductosHtml(registros) {
     const { id, image, name, price } = registro
 
     productoHTML += `
-    
-    <div class="producto centrar-texto">
-    <img src="${image}" alt="Mochila" />
-    <p class="nombre">${name}</p>
-    <p class="precio">$${price}</p>
-    <button class="add" onclick="add(${id})" >Agregar Carrito</button>
-  </div>
-
+      <div class="producto centrar-texto">
+        <img src="${image}" alt="Mochila" />
+        <p class="nombre">${name}</p>
+        <p class="precio">$${price}</p>
+        <button class="add" onclick="add(${id})" >Agregar Carrito</button>
+      </div>
     `
     productosHTML.innerHTML = productoHTML
   })
@@ -83,7 +81,6 @@ function llenarIds () {
   });
   return arrayIds;
 }
-
 
 // Trae datos del localStorage y contruye el html del carrito
 function getProductosLocal() {
@@ -327,8 +324,9 @@ function createElementHtml (element, classname, content, dataset, src) {
 }
 
 window.onload = async () => {
-  await fetchProducts()
-  // await addCarritoHTML()
+  const productos = await fetchProducts()
+  renderProductosHtml(productos)
+
   new Promise (function(resolve, reject) {
     resolve(getProductosLocal())
     reject(console.log("Error"))
