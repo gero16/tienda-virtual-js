@@ -1,6 +1,5 @@
-import { getProductosLocal, fetchProducts, productList, datosProductosAgregados, createElementHtml } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts, productList, datosProductosAgregados, createElementHtml, traerIdsLocalStorage } from "./helpers.mjs";
 // Pagina Principal
-
 
 // Productos
 const productosHTML = document.querySelector(".productos");
@@ -32,7 +31,6 @@ ocultarCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'none'
 })
 
-
 ///***  Agregar productos al Carrito ***///
 function add(productId, price) {
   // Traer el producto que coincida con el id del producto de la BD
@@ -45,13 +43,18 @@ function add(productId, price) {
     order.items.push(product)
 
     const existe = ids.find((id) => id == productId)
-    if(!existe) ids.push(productId)
+    if(!existe) {
+      const getIds = JSON.parse(localStorage.getItem("productoIds"))
+      getIds ? ids=[...getIds, productId] : ids.push(productId)
+    }
 
     productoLocalStorage = product;
     localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
     console.log(productoLocalStorage);
-    addCarritoHTML(product);
+
+    const getIds = JSON.parse(localStorage.getItem("productoIds"))
+    addCarritoHTML(product, getIds);
   } 
   else {
     getProductActualizar.stock--
@@ -67,7 +70,6 @@ function add(productId, price) {
   borrarItemCarrito();
 }
 
-
 // Construir HTML de los productos
 function renderProductosHtml(registros) {
   let productoHTML = ''
@@ -80,39 +82,22 @@ function renderProductosHtml(registros) {
     const precio = createElementHtml("p", [], price)
     const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
     
-
     divProducto.append(img, nombre, precio, button)
     productosHTML.append(divProducto)
-    /*
-    productoHTML += `
-      <div class="producto centrar-texto">
-        <img src="${image}" alt="Mochila" />
-        <p class="nombre">${name}</p>
-        <p class="precio">$${price}</p>
-        <button class="add" onclick="add(${id})"> Agregar Carrito </button>
-      </div>
-    `
-    productosHTML.innerHTML = productoHTML
-    */
   })
   const btns = document.querySelectorAll(".add")
   btns.forEach(element => element.addEventListener("click", (e) => add(e.target.dataset.id) ));
 }
 
-
 ///***  Crear el HTML del Carrito ***///
-function addCarritoHTML(product) {
+function addCarritoHTML(product, getIds) {
   console.log(product)
-  const carritoVacio = document.querySelector('.carrito-vacio')
-  carritoVacio.innerHTML = ''
-
+  
   let { image, name, price, id, cantidad } = product
 
   // Caja Producto
-  const imgCarrito = document.createElement('img')
-  imgCarrito.src = `${image}`
-  imgCarrito.classList.add('img-comprar')
-
+  const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", image)
+    
   // Seccion Contenido
   const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
   const nombreProducto = createElementHtml("p", [], name)
@@ -137,12 +122,10 @@ function addCarritoHTML(product) {
 
   articulos++
   numbCompras.textContent = articulos
-
   sumaSub = sumaSub + price;
   console.log(sumaSub)
   subTotalHtml.textContent = sumaSub;
 }
-
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
 function borrarItemCarrito() {
@@ -150,15 +133,16 @@ function borrarItemCarrito() {
   for (let i = 0; i <= btnBorrar.length - 1; i++) {
     btnBorrar[i].addEventListener('click', (e) => {
       let id = (e.target.dataset.id).split("-")
-      
-      e.target.parentNode.parentNode.removeChild(document.querySelector(`.producto-${id[1]}`))
-      JSON.parse(localStorage.removeItem(`producto-${id[1]}`))
+      console.log(e.target.parentNode.parentNode)
+      e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${id[1]}"]`))
+      localStorage.removeItem(`producto-${id[1]}`)
 
       const getIds = JSON.parse(localStorage.getItem("productoIds"))
-      ids = getIds.filter((elementId) => elementId !== Number(id[1]))
+      ids = getIds.filter((elementId) => elementId != Number(id[1]))
+      console.log(ids)
       localStorage.removeItem("productoIds")
-      localStorage.setItem(`productoIds`, JSON.stringify(ids));
-
+      ids.length > 0 ?  localStorage.setItem(`productoIds`, JSON.stringify(ids)) : ""
+     
       articulos--
       if (articulos == -1) numbCompras.textContent = 0
       numbCompras.textContent = articulos
@@ -169,8 +153,12 @@ function borrarItemCarrito() {
 
 ///*** FILTROOOOOOOOOOS ***///
 let filtradoHTML = "";
+const filtroPrecio = document.querySelector("#precio")
+let mostrarPrecio = document.querySelector("#mostrar-precio")
 const filtroCategorias = document.querySelector(".filtro-categorias")
+
 filtroCategorias.addEventListener("click", (e) => {
+  console.log(Number(filtroPrecio.value))
     // Es tan rapido que no puedo manejarlo 
   const preloader = document.querySelector(".preloader")
   //preloader.style.display = "block";
@@ -184,16 +172,16 @@ filtroCategorias.addEventListener("click", (e) => {
   e.target.classList.add("seleccionado")
   
   productList.forEach((elemento) => {
-    let { category } = elemento;
+    let { name, image, id, category, price } = elemento;
     
-    if (category == nameCategoria) {
-      let { name, image, price, id } = elemento;
+    console.log(elemento)
+    if (category == nameCategoria && price >= Number(filtroPrecio.value)) {
       filtradoHTML += `
       <div class="producto producto-filtrado centrar-texto">
-      <img src="${image}" alt="Mochila" />
-      <p class="nombre">${name}</p>
-      <p class="precio">$${price}</p>
-      <button class="add" onclick="add(${id})" >Agregar Carrito</button>
+        <img src="${image}" alt="Mochila" />
+        <p class="nombre">${name}</p>
+        <p class="precio">$${price}</p>
+        <button class="add" onclick="add(${id})" >Agregar Carrito</button>
       </div>
       `;
     }
@@ -204,9 +192,7 @@ filtroCategorias.addEventListener("click", (e) => {
   
 });
 
-const filtroPrecios = document.querySelector(".precio-principal")
-let mostrarPrecio = document.querySelector("#mostrar-precio")
-filtroPrecios.addEventListener("click", (e) => {
+filtroPrecio.addEventListener("click", (e) => {
   const precioPrincipal = parseInt(e.target.value)
   console.log(precioPrincipal)
   mostrarPrecio.textContent = precioPrincipal

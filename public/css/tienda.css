@@ -51,6 +51,10 @@
   margin: 0px auto 0px auto;
 
 }
+
+.filtro h3 {
+  font-weight: bold;
+}
 .lista-precios {
   display: none;
   padding: 5px;
@@ -61,10 +65,14 @@
 }
 
 .precio-principal {
-  padding-left: 5px;
+  padding: 5px;
 }
 .precios-titulo {
   font-weight: 500;
+  margin-bottom: 10px;
+}
+
+#mostrar-precio {
   margin-bottom: 5px;
 }
 
@@ -262,28 +270,6 @@
   font-weight: 600;
 }
 
-.stock {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid rgb(141, 139, 139);
-  margin: 5px 0px 0px 0px;
-  width: 70px;
-}
-
-.sumar,
-.restar {
-  padding: 0px 7px 0px 7px;
-  font-size: 20px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.input-carrito {
-  margin-top: 3px;
-  border: 0;
-  width: 15px;
-}
 
 .producto-filtrado{
   /*visibility: hidden;
@@ -305,8 +291,8 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type=range]::-webkit-slider-thumb {
   background-color: #005CC8;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   margin-top: -9px;
 }

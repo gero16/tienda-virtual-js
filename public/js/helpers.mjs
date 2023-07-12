@@ -23,14 +23,12 @@ export async function fetchProducts() {
   return productList;
 }
 
-
 export function llenarIds () {
   productList.forEach(element => {
     arrayIds.push(element.id)
   });
   return arrayIds;
 }
-
 
 export function createElementHtml (element, classname, content, dataset, src) {
     const elementoEtiqueta = document.createElement(`${element}`);
@@ -50,8 +48,9 @@ export function createElementHtml (element, classname, content, dataset, src) {
     return elementoEtiqueta
 }
 
-function htmlCarrito () {
+function htmlCarritoLocalStorage () {
   if (datosProductosAgregados) { 
+    document.querySelector(".producto-vacio"). innerHTML = ""
     datosProductosAgregados.forEach((product) => {
       ids = JSON.parse(localStorage.getItem(`productoIds`)) 
       // Construir html del carrito - Que viene de localStorage
@@ -78,7 +77,7 @@ function htmlCarrito () {
       // Borrar
       const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${product.id}`)
   
-      const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
+      const productoCarrito = createElementHtml("div", ["producto-carrito"], "", `producto-${product.id}`)
       productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
       productosCarrito.append(productoCarrito);
 
@@ -89,25 +88,30 @@ function htmlCarrito () {
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
     });
+  } else {
+   
   }
+}
+
+export function traerIdsLocalStorage (ids) {
+  console.log(ids)
+  ids.forEach(id => {
+      let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
+      if(data) datosProductosAgregados.push(data)
+      else return;
+  })
 }
 
 export function getProductosLocal() {
     llenarIds();
+    
     const promise = new Promise(function (resolve, reject) {
-      resolve(arrayIds.forEach(id => {
-        let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
-        if(data) datosProductosAgregados.push(data)
-      }))
-
-      return datosProductosAgregados
+      resolve(traerIdsLocalStorage(arrayIds))
     })
-  
     promise.then(function () {
-      htmlCarrito()
-  })
-
-  promise.then(function () {
+      htmlCarritoLocalStorage()
+    })
+    promise.then(function () {
     const inputCarrito = document.querySelectorAll(".input-carrito");
     const sumar = document.querySelectorAll(".sumar");
     // Agregar Unidades del Carrito
@@ -125,7 +129,6 @@ export function getProductosLocal() {
       });
     }
   })
-  promise.then( () => datosProductosAgregados)
-  }
+}
 
   
