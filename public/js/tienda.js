@@ -1,3 +1,4 @@
+import { getProductosLocal, fetchProducts, productList, datosProductosAgregados, createElementHtml } from "./helpers.mjs";
 // Pagina Principal
 const homePage = document.querySelector(".pagina-principal");
 
@@ -12,25 +13,14 @@ const iconoCarrito = document.querySelector('.carrito')
 const numbCompras = document.querySelector('.numero-compras')
 const subTotal = document.querySelector('.sub-total')
 
-// Orden de Pago
-const pagoHTML = document.querySelector(".order");
-const precio = document.querySelector(".precio");
-
-// Filtro
-const filtro = document.querySelector(".lista-filtro");
-
 // LocalStorage
 let productoStorage = ''
 let productoLocalStorage = []
-let datosProductosAgregados = []
 
-let carrito = []
-let productList = []
 let ids = []
 let order = {
   items: [],
 };
-let total = 0;
 let sumaSub = 0;
 let articulos = 0;
 
@@ -43,18 +33,40 @@ ocultarCarrito.addEventListener('click', () => {
 })
 
 
-// Traer los Productos de la BD
-async function fetchProducts() {
-  let productos = await (await fetch('/api/productos')).json()
+///***  Agregar productos al Carrito ***///
+function add(productId, price) {
+  // Traer el producto que coincida con el id del producto de la BD
+  let product = productList.find((p) => p.id == productId)
+  const getProductActualizar = datosProductosAgregados.find(element => element.id == productId);
 
-  let { registros } = productos;
+  if(!getProductActualizar) {
+    product.stock--
+    product.cantidad++
+    order.items.push(product)
+    
+    const existe = ids.find((id) => id == productId)
+    if(!existe) ids.push(productId)
 
-  productList = registros;
-
-  llenarIds()
-
-  return productList
+    productoLocalStorage = product;
+    localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
+    localStorage.setItem(`productoIds`, JSON.stringify(ids));
+    console.log(productoLocalStorage);
+    addCarritoHTML(product);
+  } 
+  else {
+    getProductActualizar.stock--
+    getProductActualizar.cantidad++
+    console.log(productoStorage)
+    localStorage.removeItem(`producto-${productId}`)
+    localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
+    
+    let inputCarrito = document.querySelector(`[data-id="input-${getProductActualizar.id}"]`);
+    inputCarrito.value = getProductActualizar.cantidad;
+   
+    }
+  borrarItemCarrito();
 }
+
 
 // Construir HTML de los productos
 function renderProductosHtml(registros) {
@@ -62,84 +74,39 @@ function renderProductosHtml(registros) {
   registros.forEach((registro) => {
     const { id, image, name, price } = registro
 
+    const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+    const img = createElementHtml("img", [], "", "", image)
+    const nombre = createElementHtml("p", [], name)
+    const precio = createElementHtml("p", [], price)
+    const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+    
+
+    divProducto.append(img, nombre, precio, button)
+    productosHTML.append(divProducto)
+    /*
     productoHTML += `
       <div class="producto centrar-texto">
         <img src="${image}" alt="Mochila" />
         <p class="nombre">${name}</p>
         <p class="precio">$${price}</p>
-        <button class="add" onclick="add(${id})" >Agregar Carrito</button>
+        <button class="add" onclick="add(${id})"> Agregar Carrito </button>
       </div>
     `
     productosHTML.innerHTML = productoHTML
+    */
   })
+  const btns = document.querySelectorAll(".add")
+  btns.forEach(element => element.addEventListener("click", (e) => add(e.target.dataset.id) ));
 }
 
-let arrayIds = []
-function llenarIds () {
-  productList.forEach(element => {
-    arrayIds.push(element.id)
-  });
-  return arrayIds;
-}
-
-// Trae datos del localStorage y contruye el html del carrito
-function getProductosLocal() {
-  const promise = new Promise(function (resolve, reject) {
-    resolve(arrayIds.forEach(id => {
-      let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
-      if(data) datosProductosAgregados.push(data)
-    }))
-  })
-
-  promise.then(function () {
-    if (datosProductosAgregados) { 
-      datosProductosAgregados.forEach((product) => {
-        ids = JSON.parse(localStorage.getItem(`productoIds`)) 
-        // Construir html del carrito - Que viene de localStorage
-        articulos++; // antes lo tenia abajo y me funcionaba mal
-
-        // element, classname, content, dataset, src 
-        const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", product.image)
-      
-        // Seccion Contenido
-        const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
-        const nombreProducto = createElementHtml("p", [], product.name)
-        const precioProducto = createElementHtml("p", [], product.price)
-        divContenidoCarrito.append(nombreProducto, precioProducto);
-
-        // Seccion Stock
-        const divStock = createElementHtml("div", ["stock"])
-        const spanRestar = createElementHtml("span", ["restar"], "-")
-        const spanSumar = createElementHtml("span", ["sumar"], "+")
-        const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${product.id}`)
-        inputCarrito.value = product.cantidad;
-        divStock.append(spanRestar, inputCarrito, spanSumar);
-        divContenidoCarrito.append(divStock);
-
-        // Borrar
-        const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${product.id}`)
-    
-        const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
-        productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
-        productosCarrito.append(productoCarrito);
-
-        // Me aparecen 2 producto-carrito's creados antes en el HTML
-        numbCompras.textContent = articulos;
-        subTotal.innerHTML = `$${sumaSub}`;
-      });
-    }
-})
-
-  return datosProductosAgregados;
-}
 
 ///***  Crear el HTML del Carrito ***///
 function addCarritoHTML(product) {
+  console.log(product)
   const carritoVacio = document.querySelector('.carrito-vacio')
   carritoVacio.innerHTML = ''
 
   let { image, name, price, id, cantidad } = product
-  console.log(product)
 
   // Caja Producto
   const imgCarrito = document.createElement('img')
@@ -164,7 +131,7 @@ function addCarritoHTML(product) {
   // Borrar
   const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${id}`)
   // Agregar img, y divs al producto-carrito
-  const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
+  const productoCarrito = createElementHtml("div", ["producto-carrito"], "", `producto-${product.id}`)
   productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
   productosCarrito.append(productoCarrito);
 
@@ -172,47 +139,9 @@ function addCarritoHTML(product) {
   numbCompras.textContent = articulos
 
   sumaSub = sumaSub + price;
+  console.log(sumaSub)
   subTotal.textContent = sumaSub;
 }
-
-///***  Agregar productos al Carrito ***///
-function add(productId, price) {
-  // Traer el producto que coincida con el id del producto de la BD
-  let product = productList.find((p) => p.id === productId)
-  
-  console.log(datosProductosAgregados)
-  const getProductActualizar = datosProductosAgregados.find(element => element.id === productId);
-  //productStorage = JSON.parse(localStorage.getItem(`producto-${productId}`))
-  console.log(getProductActualizar)
-  if(!getProductActualizar) {
-    product.stock--
-    product.cantidad++
-    order.items.push(product)
-
-    const existe = ids.find((id) => id == productId)
-    console.log(existe)
-    if(!existe) ids.push(productId)
-
-    productoLocalStorage = product;
-    localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
-    localStorage.setItem(`productoIds`, JSON.stringify(ids));
-    console.log(productoLocalStorage);
-    addCarritoHTML(product);
-  } 
-  else {
-    getProductActualizar.stock--
-    getProductActualizar.cantidad++
-    console.log(productoStorage)
-    localStorage.removeItem(`producto-${productId}`)
-    localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
-    
-    let inputCarrito = document.querySelector(`[data-id="input-${getProductActualizar.id}"]`);
-    inputCarrito.value = getProductActualizar.cantidad;
-   
-    }
-  borrarItemCarrito();
-}
-
 
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
@@ -277,7 +206,6 @@ filtroCategorias.addEventListener("click", (e) => {
 
 const filtroPrecios = document.querySelector(".precio-principal")
 let mostrarPrecio = document.querySelector("#mostrar-precio")
-console
 filtroPrecios.addEventListener("click", (e) => {
   const precioPrincipal = parseInt(e.target.value)
   console.log(precioPrincipal)
@@ -305,61 +233,16 @@ filtroPrecios.addEventListener("click", (e) => {
   });
 })
 
-function createElementHtml (element, classname, content, dataset, src) {
-  const elementoEtiqueta = document.createElement(`${element}`);
-
-  if(classname) {
-      classname.forEach(clase => {
-          elementoEtiqueta.className += `${clase} `
-      });
-  }
-
-  if(content) elementoEtiqueta.textContent =  content
-
-  if(dataset) elementoEtiqueta.dataset.id = `${dataset}`
-
-  if(src) elementoEtiqueta.src = src
-
-  return elementoEtiqueta
-}
-
 window.onload = async () => {
   const productos = await fetchProducts()
+  console.log(productos)
   renderProductosHtml(productos)
 
   new Promise (function(resolve, reject) {
-    resolve(getProductosLocal())
+    resolve( getProductosLocal())
     reject(console.log("Error"))
   })
   .then(function() {
     borrarItemCarrito()
   })
-
-  const inputsCarrito = document.querySelectorAll(".input-carrito");
-  const sumar = document.querySelectorAll(".sumar");
-
-  for (let i = 0; i <= sumar.length - 1; i++) {
-    sumar[i].addEventListener("click", (e) => {
-      // Tengo que hacer algo parecido al add(id)
-      const idSpan = parseInt(e.target.parentNode.children[1].dataset.id);
-
-      const product = productList.find((p) => p.id === idSpan);
-      console.log(product);
-      inputsCarrito[i].value++;
-      product.stock--;
-      product.cantidad++;
-      console.log(product.cantidad);
-    
-    });
-  }
-
-  const restar = document.querySelectorAll('.restar')
-  // Restar Unidades al Carrito
-  for (let i = 0; i <= restar.length - 1; i++) {
-    restar[i].addEventListener('click', () => {
-      inputsCarrito[i].value--
-    })
-  }
-
-
 }

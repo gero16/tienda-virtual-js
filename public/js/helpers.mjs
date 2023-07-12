@@ -1,5 +1,5 @@
-let datosProductosAgregados = []
-let productList = []
+export let datosProductosAgregados = []
+export let productList = []
 let arrayIds = []
 let ids = []
 
@@ -20,6 +20,8 @@ export async function fetchProducts() {
   productList = registros;
 
   llenarIds()
+
+  return productList;
 }
 
 
@@ -32,7 +34,7 @@ export function llenarIds () {
 }
 
 
-function createElementHtml (element, classname, content, dataset, src) {
+export function createElementHtml (element, classname, content, dataset, src) {
     const elementoEtiqueta = document.createElement(`${element}`);
   
     if(classname) {
@@ -56,6 +58,8 @@ export function getProductosLocal() {
         let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
         if(data) datosProductosAgregados.push(data)
       }))
+
+      return datosProductosAgregados
     })
   
     promise.then(function () {
@@ -97,6 +101,26 @@ export function getProductosLocal() {
         });
       }
   })
+  promise.then(function () {
+    const inputCarrito = document.querySelectorAll(".input-carrito");
+    const sumar = document.querySelectorAll(".sumar");
+    // Agregar Unidades del Carrito
+    for (let i = 0; i <= sumar.length - 1; i++) {
+      sumar[i].addEventListener("click", () => {
+        inputCarrito[i].value++;
+      });
+    }
+  
+    const restar = document.querySelectorAll(".restar");
+    // Restar Unidades al Carrito
+    for (let i = 0; i <= restar.length - 1; i++) {
+      restar[i].addEventListener("click", () => {
+        inputCarrito[i].value--;
+      });
+    }
+  })
   
     return datosProductosAgregados;
   }
+
+  
