@@ -1,6 +1,6 @@
 import { getProductosLocal, fetchProducts, productList, datosProductosAgregados, createElementHtml } from "./helpers.mjs";
 // Pagina Principal
-const homePage = document.querySelector(".pagina-principal");
+
 
 // Productos
 const productosHTML = document.querySelector(".productos");
@@ -11,7 +11,7 @@ const carritoHTML = document.querySelector('.carritoHTML')
 const ocultarCarrito = document.querySelector('.ocultar-carrito')
 const iconoCarrito = document.querySelector('.carrito')
 const numbCompras = document.querySelector('.numero-compras')
-const subTotal = document.querySelector('.sub-total')
+const subTotalHtml = document.querySelector('.sub-total')
 
 // LocalStorage
 let productoStorage = ''
@@ -43,7 +43,7 @@ function add(productId, price) {
     product.stock--
     product.cantidad++
     order.items.push(product)
-    
+
     const existe = ids.find((id) => id == productId)
     if(!existe) ids.push(productId)
 
@@ -140,7 +140,7 @@ function addCarritoHTML(product) {
 
   sumaSub = sumaSub + price;
   console.log(sumaSub)
-  subTotal.textContent = sumaSub;
+  subTotalHtml.textContent = sumaSub;
 }
 
 
@@ -235,7 +235,6 @@ filtroPrecios.addEventListener("click", (e) => {
 
 window.onload = async () => {
   const productos = await fetchProducts()
-  console.log(productos)
   renderProductosHtml(productos)
 
   new Promise (function(resolve, reject) {

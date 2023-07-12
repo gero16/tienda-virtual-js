@@ -1,15 +1,16 @@
 export let datosProductosAgregados = []
 export let productList = []
-let arrayIds = []
+export let arrayIds = []
 let ids = []
 
-let total = 0;
+export let total = 0;
+export let subTotal = 0;
 let sumaSub = 0;
 let articulos = 0;
 
 const productosCarrito = document.querySelector(".productos-carrito");
 const numbCompras = document.querySelector('.numero-compras')
-const subTotal = document.querySelector('.sub-total')
+const subTotalHtml = document.querySelector('.sub-total')
 
 // Traer los Productos de la BD
 export async function fetchProducts() {
@@ -18,8 +19,6 @@ export async function fetchProducts() {
   let { registros } = productos;
 
   productList = registros;
-
-  llenarIds()
 
   return productList;
 }
@@ -52,7 +51,52 @@ export function createElementHtml (element, classname, content, dataset, src) {
     return elementoEtiqueta
 }
 
+function htmlCarrito () {
+  if (datosProductosAgregados) { 
+    console.log(datosProductosAgregados)
+    datosProductosAgregados.forEach((product) => {
+      ids = JSON.parse(localStorage.getItem(`productoIds`)) 
+      // Construir html del carrito - Que viene de localStorage
+      articulos++; // antes lo tenia abajo y me funcionaba mal
+
+      // element, classname, content, dataset, src 
+      const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", product.image)
+    
+      // Seccion Contenido
+      const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
+      const nombreProducto = createElementHtml("p", [], product.name)
+      const precioProducto = createElementHtml("p", [], product.price, `price-${product.id}`)
+      divContenidoCarrito.append(nombreProducto, precioProducto);
+
+      // Seccion Stock
+      const divStock = createElementHtml("div", ["stock"])
+      const spanRestar = createElementHtml("span", ["restar"], "-")
+      const spanSumar = createElementHtml("span", ["sumar"], "+")
+      const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${product.id}`)
+      inputCarrito.value = product.cantidad;
+      divStock.append(spanRestar, inputCarrito, spanSumar);
+      divContenidoCarrito.append(divStock);
+
+      // Borrar
+      const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${product.id}`)
+  
+      const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
+      productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
+      productosCarrito.append(productoCarrito);
+
+      // Me aparecen 2 producto-carrito's creados antes en el HTML
+      numbCompras.textContent = articulos;
+      sumaSub = product.cantidad * product.price
+      document.querySelector(`[data-id="price-${product.id}"]`).textContent= sumaSub
+      console.log(sumaSub)
+      total = total + sumaSub
+      subTotalHtml.innerHTML = `$${total}`;
+    });
+  }
+}
+
 export function getProductosLocal() {
+    llenarIds();
     const promise = new Promise(function (resolve, reject) {
       resolve(arrayIds.forEach(id => {
         let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
@@ -63,44 +107,9 @@ export function getProductosLocal() {
     })
   
     promise.then(function () {
-      if (datosProductosAgregados) { 
-        console.log(datosProductosAgregados)
-        datosProductosAgregados.forEach((product) => {
-          ids = JSON.parse(localStorage.getItem(`productoIds`)) 
-          // Construir html del carrito - Que viene de localStorage
-          articulos++; // antes lo tenia abajo y me funcionaba mal
-  
-          // element, classname, content, dataset, src 
-          const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", product.image)
-        
-          // Seccion Contenido
-          const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
-          const nombreProducto = createElementHtml("p", [], product.name)
-          const precioProducto = createElementHtml("p", [], product.price)
-          divContenidoCarrito.append(nombreProducto, precioProducto);
-  
-          // Seccion Stock
-          const divStock = createElementHtml("div", ["stock"])
-          const spanRestar = createElementHtml("span", ["restar"], "-")
-          const spanSumar = createElementHtml("span", ["sumar"], "+")
-          const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${product.id}`)
-          inputCarrito.value = product.cantidad;
-          divStock.append(spanRestar, inputCarrito, spanSumar);
-          divContenidoCarrito.append(divStock);
-  
-          // Borrar
-          const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${product.id}`)
-      
-          const productoCarrito = createElementHtml("div", [`producto-carrito producto-${product.id}`])
-          productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
-          productosCarrito.append(productoCarrito);
-  
-          // Me aparecen 2 producto-carrito's creados antes en el HTML
-          numbCompras.textContent = articulos;
-          subTotal.innerHTML = `$${sumaSub}`;
-        });
-      }
+      htmlCarrito()
   })
+
   promise.then(function () {
     const inputCarrito = document.querySelectorAll(".input-carrito");
     const sumar = document.querySelectorAll(".sumar");
@@ -119,8 +128,8 @@ export function getProductosLocal() {
       });
     }
   })
+  promise.then( () => datosProductosAgregados)
   
-    return datosProductosAgregados;
   }
 
   

@@ -1,42 +1,53 @@
-let array = [];
+let envio = 0;
+let total = 0;
+let subTotal = 0
+let sumaSubTotal = 0
+let promo = 0;
+let productoIds = [];
 let divPedido = document.querySelector(".contenido-pedido");
 let cantidadPedido = document.querySelector(".cantidad-pedido");
 let infoPedido = document.querySelector(".info-pedido");
-
-window.onload = () => {
+let datosProductosAgregados = []
+let productosComprar = ""
+window.onload = async () => {
   checkoutHTML();
+
+  console.log(total)
+  
+  const promise = new Promise(function (resolve, reject) {
+    resolve(productoIds = JSON.parse(localStorage.getItem(`productoIds`)) )
+  })
+
+ promise.then(function () {
+  console.log(productoIds)
+  checkoutHTML(productosComprar)
+ })
+
 };
 
 let ids = JSON.parse(localStorage.getItem(`productoIds`)) 
-let datosProductosAgregados = []
 
-function getProductosLocal() {
-  ids.forEach(id => {
-      let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
-      if(data) datosProductosAgregados.push(data)
-  })
-  return datosProductosAgregados;
-}
-
-
-function checkoutHTML(product) {
+function checkoutHTML(products) {
   let pedidoHTML = "";
 
-  const datosProductos = getProductosLocal()
-  datosProductos.forEach((product) => {
-    console.log(product);
+  productoIds.forEach(id => {
+    let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
+    if(data) datosProductosAgregados.push(data)
+  })
+
+  datosProductosAgregados.forEach((product) => {
     let { name, image, price, id, cantidad } = product;
-
-    ids.push(id);
-
-    let subTotalPedido =  price * cantidad;
+    subTotal =  price * cantidad
+    sumaSubTotal = sumaSubTotal + price * cantidad;
+    total = sumaSubTotal + envio
+    ids.push(id)
     pedidoHTML += `
       <div class="producto-pedido">
         <img class="imagen-pedido" src="${image}" alt="foto-${name}" />
         <div class="info-pedido">
           <h3 class="nombre-pedido">${name}</h3>
           <p class="cantidad-pedido">${cantidad}</p>
-          <p class="precio-pedido">$${subTotalPedido}</p>
+          <p class="precio-pedido">$${subTotal}</p>
         </div>
       </div> `;
     divPedido.innerHTML = pedidoHTML;
@@ -54,20 +65,20 @@ function checkoutHTML(product) {
     const pCategoriaSub = document.createElement("p");
     pCategoriaSub.textContent = "SubTotal:";
     const pSub = document.createElement("p");
-    pSub.textContent = "MUCHO!";
+    pSub.textContent = "$ " + sumaSubTotal;
     // Envio
     const liEnvio = document.createElement("li");
     const pCategoriaEnvio = document.createElement("p");
     pCategoriaEnvio.textContent = "Envio:";
     const pEnvio = document.createElement("p");
-    pEnvio.textContent = "Gratis";
+    pEnvio.textContent = envio === 0 ? "Gratis!" :"$ " + envio;
     // Total
     const liTotal = document.createElement("li");
     liTotal.classList.add("liTotal");
     const pCategoriaTotal = document.createElement("h2");
     pCategoriaTotal.textContent = "Total:";
     const pTotal = document.createElement("p");
-    pTotal.textContent = "MUCHO MAS!";
+    pTotal.textContent = "$ " + total;
 
     liSub.append(pCategoriaSub, pSub);
     liEnvio.append(pCategoriaEnvio, pEnvio);
@@ -78,6 +89,7 @@ function checkoutHTML(product) {
 
     console.log(ids);
   });
+  
 
   // console.log(JSON.parse(localStorage.getItem(`producto-carrito${i}`)))
 }
