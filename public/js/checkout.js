@@ -22,6 +22,7 @@ window.onload = async () => {
   checkoutHTML(productosComprar)
  })
 
+
 };
 
 let ids = JSON.parse(localStorage.getItem(`productoIds`)) 
@@ -93,16 +94,6 @@ function checkoutHTML(products) {
   // console.log(JSON.parse(localStorage.getItem(`producto-carrito${i}`)))
 }
 
-/*
-  const imgPedido = document.querySelector('.nombre-pedido')
-  imgPedido.src = image
-  const namePedido = document.querySelector('.nombre-pedido')
-  namePedido.textContent = name
-  const cantidadPedido = document.querySelector('.cantidad-pedido')
-  const precioPedido = document.querySelector('.precio-pedido')
-  precioPedido.textContent = price
-  */
-
 // Pagar los productos
 async function pay() {
   let shipping = {
@@ -141,3 +132,17 @@ async function pay() {
     console.log(error);
   }
 }
+
+const btnConfirmar = document.querySelector(".confirmar") 
+btnConfirmar.addEventListener("click", function () {
+  pay()
+})
+
+const btnVolver = document.querySelector(".volver") 
+function volver () {
+  window.history.back()
+}
+
+btnVolver.addEventListener("click", function () {
+  volver()
+})

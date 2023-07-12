@@ -126,7 +126,6 @@ export function getProductosLocal() {
     }
   })
   promise.then( () => datosProductosAgregados)
-  
   }
 
   
