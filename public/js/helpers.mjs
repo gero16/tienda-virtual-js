@@ -28,7 +28,6 @@ export function llenarIds () {
   productList.forEach(element => {
     arrayIds.push(element.id)
   });
-  console.log(arrayIds)
   return arrayIds;
 }
 
@@ -53,7 +52,6 @@ export function createElementHtml (element, classname, content, dataset, src) {
 
 function htmlCarrito () {
   if (datosProductosAgregados) { 
-    console.log(datosProductosAgregados)
     datosProductosAgregados.forEach((product) => {
       ids = JSON.parse(localStorage.getItem(`productoIds`)) 
       // Construir html del carrito - Que viene de localStorage
@@ -88,7 +86,6 @@ function htmlCarrito () {
       numbCompras.textContent = articulos;
       sumaSub = product.cantidad * product.price
       document.querySelector(`[data-id="price-${product.id}"]`).textContent= sumaSub
-      console.log(sumaSub)
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
     });

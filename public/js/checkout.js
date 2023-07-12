@@ -1,25 +1,24 @@
+let divPedido = document.querySelector(".contenido-pedido");
+let cantidadPedido = document.querySelector(".cantidad-pedido");
+let infoPedido = document.querySelector(".info-pedido");
+
 let envio = 0;
 let total = 0;
 let subTotal = 0
 let sumaSubTotal = 0
 let promo = 0;
 let productoIds = [];
-let divPedido = document.querySelector(".contenido-pedido");
-let cantidadPedido = document.querySelector(".cantidad-pedido");
-let infoPedido = document.querySelector(".info-pedido");
 let datosProductosAgregados = []
 let productosComprar = ""
+
 window.onload = async () => {
   checkoutHTML();
-
-  console.log(total)
   
   const promise = new Promise(function (resolve, reject) {
     resolve(productoIds = JSON.parse(localStorage.getItem(`productoIds`)) )
   })
 
  promise.then(function () {
-  console.log(productoIds)
   checkoutHTML(productosComprar)
  })
 
