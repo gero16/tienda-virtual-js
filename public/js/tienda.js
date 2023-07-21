@@ -164,17 +164,30 @@ filtroCategorias.addEventListener("click", (e) => {
   //preloader.style.display = "block";
 
   productosHTML.innerHTML = " ";
-  console.log(productosHTML)
   filtradoHTML = "";
   // FILTRO CATEGORIA
   let nameCategoria = e.target.id;
   
-  e.target.classList.add("seleccionado")
+  const previousSelected = document.querySelector(".seleccionado")
+  console.log(previousSelected)
+
+  if(previousSelected) {
+    previousSelected.classList.toggle("seleccionado")
+    e.target.classList.toggle("seleccionado")
+    console.log(e.target.id)
+  } else {
+    e.target.classList.toggle("seleccionado")
+  }
+
+  if(previousSelected && previousSelected.id == e.target.id) {
+    console.log("hola")
+    previousSelected.classList.remove("seleccionado")
+  }
+
   
   productList.forEach((elemento) => {
     let { name, image, id, category, price } = elemento;
     
-    console.log(elemento)
     if (category == nameCategoria && price >= Number(filtroPrecio.value)) {
       filtradoHTML += `
       <div class="producto producto-filtrado centrar-texto">
@@ -198,25 +211,47 @@ filtroPrecio.addEventListener("click", (e) => {
   mostrarPrecio.textContent = precioPrincipal
   filtradoHTML = " ";
 
-  productList.forEach((elemento) => {
-    let { price } = elemento;
-
-    if (precioPrincipal < price) {
-      let { name, image, price, id } = elemento;
-    
-      filtradoHTML += `
-        <div class="producto producto-filtrado centrar-texto">
-        <img src="${ image }" alt="Mochila" />
-        <p class="nombre">${ name }</p>
-        <p class="precio">$${ price }</p>
-        <button class="add" onclick="add(${ id })"> Agregar Carrito </button>
-      </div>
-    `;
-    }
-    let mostrarPrecio = document.querySelector("#mostrar-precio")
-    mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
-    productosHTML.innerHTML = filtradoHTML;
-  });
+  const selectedCategory = document.querySelector(".seleccionado")
+  if(selectedCategory) {
+    productList.forEach((elemento) => {
+      let { price, category } = elemento;    
+      if(precioPrincipal < price && category == selectedCategory.id) {
+        console.log("hola")
+        let { name, image, price, id } = elemento;
+        filtradoHTML += `
+            <div class="producto producto-filtrado centrar-texto">
+              <img src="${ image }" alt="Mochila" />
+              <p class="nombre">${ name }</p>
+              <p class="precio">$${ price }</p>
+              <button class="add" onclick="add(${ id })"> Agregar Carrito </button>
+            </div>
+          `;
+      } 
+      let mostrarPrecio = document.querySelector("#mostrar-precio")
+      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
+      productosHTML.innerHTML = filtradoHTML;
+    });
+  } else {
+    productList.forEach((elemento) => {
+      let { price, category } = elemento;
+      
+      if(precioPrincipal < price) {
+        let { name, image, price, id } = elemento;
+        filtradoHTML += `
+            <div class="producto producto-filtrado centrar-texto">
+              <img src="${ image }" alt="Mochila" />
+              <p class="nombre">${ name }</p>
+              <p class="precio">$${ price }</p>
+              <button class="add" onclick="add(${ id })"> Agregar Carrito </button>
+            </div>
+          `;
+      } 
+      let mostrarPrecio = document.querySelector("#mostrar-precio")
+      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
+      productosHTML.innerHTML = filtradoHTML;
+    });
+  }
+  
 })
 
 window.onload = async () => {

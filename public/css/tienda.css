@@ -162,15 +162,27 @@
   margin: 0px 0px 0px 2px;
 }
 
+.filtro-categorias {
+  padding: 15px 5px 15px 5px;
+  margin-bottom: 5px;
+}
 .filtro-categorias p {
   padding: 15px 5px 15px 5px;
+  margin-bottom: 5px;
 }
 
 .filtro-categorias p:hover {
   background-color: #1c1d1d;
   color: white;
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: 5px;
+}
+
+.seleccionado {
+  background-color: #1c1d1d;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .productos {
