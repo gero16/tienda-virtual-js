@@ -1,4 +1,4 @@
-import { getProductosLocal, fetchProducts, productList, createElementHtml } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts, productList, createElementHtml, total, subTotal } from "./helpers.mjs";
 // Pagina Principal
 
 // Productos
@@ -37,7 +37,7 @@ function add(productId, price) {
   let product = productList.find((p) => p.id == productId)
   const getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
   console.log(getProductActualizar)
-
+  let dataSubtotal = JSON.parse(localStorage.getItem(`subtotal`)) 
   if(!getProductActualizar) {
     product.stock--
     product.cantidad++
@@ -54,19 +54,47 @@ function add(productId, price) {
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
     console.log(productoLocalStorage);
 
+   
     //const getIds = JSON.parse(localStorage.getItem("productoIds"))
     addCarritoHTML(product);
+
+    if(dataSubtotal) {
+      // inputCarrito.value = getProductActualizar.cantidad;
+      const total =  dataSubtotal + product.price 
+      console.log(total)
+      subTotalHtml.innerHTML = dataSubtotal + product.price 
+      localStorage.setItem(`subtotal`, JSON.stringify(total));
+    } else {
+      localStorage.setItem(`subtotal`, JSON.stringify(product.price));
+      inputCarrito.value = product.price
+      subTotalHtml.innerHTML = product.price
+  
+    }
   } 
   else {
-    console.log("hola")
+    console.log(getProductActualizar)
     getProductActualizar.stock--
     getProductActualizar.cantidad++
     console.log(productoStorage)
-    localStorage.removeItem(`producto-${productId}`)
+    localStorage.removeItem(`producto-${productId}`) 
     localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
     
     let inputCarrito = document.querySelector(`[data-id="input-${getProductActualizar.id}"]`);
-    inputCarrito.value = getProductActualizar.cantidad;
+    // TENGO QUE OBTENER LA LISTA DE PRODUCTOS EN LOCALSTORAGE
+
+    
+    if(dataSubtotal) {
+      // inputCarrito.value = getProductActualizar.cantidad;
+      const newAlgo =  (dataSubtotal) + (getProductActualizar.price * getProductActualizar.cantidad)
+      console.log(newAlgo)
+       subTotalHtml.innerHTML = (dataSubtotal) + (getProductActualizar.price * getProductActualizar.cantidad)
+    } else {
+      localStorage.setItem(`subtotal`, JSON.stringify(total));
+      inputCarrito.value = total
+      subTotalHtml.innerHTML = total
+  
+    }
+
    
     }
   borrarItemCarrito();
@@ -123,7 +151,8 @@ function addCarritoHTML(product, getIds) {
   articulos++
   numbCompras.textContent = articulos
   sumaSub = sumaSub + price;
-  //console.log(sumaSub)
+  console.log(sumaSub)
+  
   subTotalHtml.textContent = sumaSub;
 }
 

@@ -87,9 +87,9 @@ function htmlCarritoLocalStorage () {
       document.querySelector(`[data-id="price-${product.id}"]`).textContent= sumaSub
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
+      localStorage.setItem(`subtotal`, JSON.stringify(total));
     });
   } else {
-   
   }
 }
 
@@ -110,7 +110,9 @@ export function getProductosLocal() {
       resolve(traerIdsLocalStorage(arrayIds))
     })
     promise.then(function () {
-      htmlCarritoLocalStorage()
+      const algo = htmlCarritoLocalStorage()
+      console.log(algo)
+
     })
     promise.then(function () {
     const inputCarrito = document.querySelectorAll(".input-carrito");
