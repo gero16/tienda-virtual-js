@@ -38,6 +38,7 @@ function add(productId, price) {
   const getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
   console.log(getProductActualizar)
   let dataSubtotal = JSON.parse(localStorage.getItem(`subtotal`)) 
+  
   if(!getProductActualizar) {
     product.stock--
     product.cantidad++
