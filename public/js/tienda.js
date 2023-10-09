@@ -1,4 +1,4 @@
-import { getProductosLocal, fetchProducts, productList, datosProductosAgregados, createElementHtml, traerIdsLocalStorage } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts, productList, createElementHtml } from "./helpers.mjs";
 // Pagina Principal
 
 // Productos
@@ -35,7 +35,8 @@ ocultarCarrito.addEventListener('click', () => {
 function add(productId, price) {
   // Traer el producto que coincida con el id del producto de la BD
   let product = productList.find((p) => p.id == productId)
-  const getProductActualizar = datosProductosAgregados.find(element => element.id == productId);
+  const getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
+  console.log(getProductActualizar)
 
   if(!getProductActualizar) {
     product.stock--
@@ -53,10 +54,11 @@ function add(productId, price) {
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
     console.log(productoLocalStorage);
 
-    const getIds = JSON.parse(localStorage.getItem("productoIds"))
-    addCarritoHTML(product, getIds);
+    //const getIds = JSON.parse(localStorage.getItem("productoIds"))
+    addCarritoHTML(product);
   } 
   else {
+    console.log("hola")
     getProductActualizar.stock--
     getProductActualizar.cantidad++
     console.log(productoStorage)
@@ -72,7 +74,7 @@ function add(productId, price) {
 
 // Construir HTML de los productos
 function renderProductosHtml(registros) {
-  let productoHTML = ''
+
   registros.forEach((registro) => {
     const { id, image, name, price } = registro
 
@@ -91,8 +93,6 @@ function renderProductosHtml(registros) {
 
 ///***  Crear el HTML del Carrito ***///
 function addCarritoHTML(product, getIds) {
-  console.log(product)
-  
   let { image, name, price, id, cantidad } = product
 
   // Caja Producto
@@ -123,7 +123,7 @@ function addCarritoHTML(product, getIds) {
   articulos++
   numbCompras.textContent = articulos
   sumaSub = sumaSub + price;
-  console.log(sumaSub)
+  //console.log(sumaSub)
   subTotalHtml.textContent = sumaSub;
 }
 
@@ -169,7 +169,7 @@ filtroCategorias.addEventListener("click", (e) => {
   let nameCategoria = e.target.id;
   
   const previousSelected = document.querySelector(".seleccionado")
-  console.log(previousSelected)
+  //console.log(previousSelected)
 
   if(previousSelected) {
     previousSelected.classList.toggle("seleccionado")
@@ -186,9 +186,22 @@ filtroCategorias.addEventListener("click", (e) => {
 
   
   productList.forEach((elemento) => {
+    //let { name, image, id, category, price } = elemento;
     let { name, image, id, category, price } = elemento;
-    
+
     if (category == nameCategoria && price >= Number(filtroPrecio.value)) {
+      console.log(elemento)
+      const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+      const img = createElementHtml("img", [], "", "", image)
+      const nombre = createElementHtml("p", [], name)
+      const precio = createElementHtml("p", [], price)
+      const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+      
+      divProducto.append(img, nombre, precio, button)
+      productosHTML.append(divProducto)
+  
+      /*
+      
       filtradoHTML += `
       <div class="producto producto-filtrado centrar-texto">
         <img src="${image}" alt="Mochila" />
@@ -197,12 +210,19 @@ filtroCategorias.addEventListener("click", (e) => {
         <button class="add" onclick="add(${id})" >Agregar Carrito</button>
       </div>
       `;
+      */
     }
     
     //preloader.style.display = "none";
-    productosHTML.innerHTML = filtradoHTML;
+    //productosHTML.innerHTML = filtradoHTML;
   });
   
+  const btns = document.querySelectorAll(".add")
+  console.log(btns)
+  btns.forEach(element => element.addEventListener("click", (e) => {
+      console.log(e.target)
+      add(e.target.dataset.id) 
+  }));
 });
 
 filtroPrecio.addEventListener("click", (e) => {

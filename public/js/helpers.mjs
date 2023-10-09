@@ -1,4 +1,3 @@
-export let datosProductosAgregados = []
 export let productList = []
 export let arrayIds = []
 let ids = []
@@ -7,6 +6,7 @@ export let total = 0;
 export let subTotal = 0;
 let sumaSub = 0;
 let articulos = 0;
+let datosProductosAgregados = []
 
 const productosCarrito = document.querySelector(".productos-carrito");
 const numbCompras = document.querySelector('.numero-compras')
@@ -50,7 +50,7 @@ export function createElementHtml (element, classname, content, dataset, src) {
 
 function htmlCarritoLocalStorage () {
   if (datosProductosAgregados) { 
-    document.querySelector(".producto-vacio"). innerHTML = ""
+    document.querySelector(".producto-vacio").innerHTML = ""
     datosProductosAgregados.forEach((product) => {
       ids = JSON.parse(localStorage.getItem(`productoIds`)) 
       // Construir html del carrito - Que viene de localStorage
@@ -94,12 +94,13 @@ function htmlCarritoLocalStorage () {
 }
 
 export function traerIdsLocalStorage (ids) {
-  console.log(ids)
+  //console.log(ids)
   ids.forEach(id => {
       let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
       if(data) datosProductosAgregados.push(data)
       else return;
   })
+  
 }
 
 export function getProductosLocal() {
