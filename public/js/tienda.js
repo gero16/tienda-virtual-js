@@ -151,6 +151,17 @@ function borrarItemCarrito() {
   }
 }
 
+function construirProductFilter () {
+  const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+  const img = createElementHtml("img", [], "", "", image)
+  const nombre = createElementHtml("p", [], name)
+  const precio = createElementHtml("p", [], price)
+  const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+  
+  divProducto.append(img, nombre, precio, button)
+ productosHTML.append(divProducto)
+}
+
 ///*** FILTROOOOOOOOOOS ***///
 let filtradoHTML = "";
 const filtroPrecio = document.querySelector("#precio")
@@ -180,7 +191,6 @@ filtroCategorias.addEventListener("click", (e) => {
   }
 
   if(previousSelected && previousSelected.id == e.target.id) {
-    console.log("hola")
     previousSelected.classList.remove("seleccionado")
   }
 
@@ -227,51 +237,63 @@ filtroCategorias.addEventListener("click", (e) => {
 
 filtroPrecio.addEventListener("click", (e) => {
   const precioPrincipal = parseInt(e.target.value)
-  console.log(precioPrincipal)
   mostrarPrecio.textContent = precioPrincipal
   filtradoHTML = " ";
+  productosHTML.innerHTML = " ";
 
   const selectedCategory = document.querySelector(".seleccionado")
   if(selectedCategory) {
     productList.forEach((elemento) => {
       let { price, category } = elemento;    
       if(precioPrincipal < price && category == selectedCategory.id) {
-        console.log("hola")
         let { name, image, price, id } = elemento;
-        filtradoHTML += `
-            <div class="producto producto-filtrado centrar-texto">
-              <img src="${ image }" alt="Mochila" />
-              <p class="nombre">${ name }</p>
-              <p class="precio">$${ price }</p>
-              <button class="add" onclick="add(${ id })"> Agregar Carrito </button>
-            </div>
-          `;
+        const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+        const img = createElementHtml("img", [], "", "", image)
+        const nombre = createElementHtml("p", [], name)
+        const precio = createElementHtml("p", [], price)
+        const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+        
+        divProducto.append(img, nombre, precio, button)
+        productosHTML.append(divProducto)
       } 
+
       let mostrarPrecio = document.querySelector("#mostrar-precio")
       mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
-      productosHTML.innerHTML = filtradoHTML;
+      //productosHTML.innerHTML = filtradoHTML;
     });
+    
+    const btns = document.querySelectorAll(".add")
+    console.log(btns)
+    btns.forEach(element => element.addEventListener("click", (e) => {
+      console.log(e.target)
+      add(e.target.dataset.id) 
+  }));
   } else {
     productList.forEach((elemento) => {
       let { price, category } = elemento;
       
       if(precioPrincipal < price) {
+        console.log(elemento)
         let { name, image, price, id } = elemento;
-        filtradoHTML += `
-            <div class="producto producto-filtrado centrar-texto">
-              <img src="${ image }" alt="Mochila" />
-              <p class="nombre">${ name }</p>
-              <p class="precio">$${ price }</p>
-              <button class="add" onclick="add(${ id })"> Agregar Carrito </button>
-            </div>
-          `;
+        const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+        const img = createElementHtml("img", [], "", "", image)
+        const nombre = createElementHtml("p", [], name)
+        const precio = createElementHtml("p", [], price)
+        const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+        
+        divProducto.append(img, nombre, precio, button)
+        productosHTML.append(divProducto)
       } 
       let mostrarPrecio = document.querySelector("#mostrar-precio")
       mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
-      productosHTML.innerHTML = filtradoHTML;
     });
+    const btns = document.querySelectorAll(".add")
+    console.log(btns)
+    btns.forEach(element => element.addEventListener("click", (e) => {
+      console.log(e.target)
+      add(e.target.dataset.id) 
+    }));
   }
-  
 })
 
 window.onload = async () => {
