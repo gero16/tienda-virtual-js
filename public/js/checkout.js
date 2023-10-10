@@ -46,16 +46,20 @@ function checkoutHTML(products) {
         <img class="imagen-pedido" src="${image}" alt="foto-${name}" />
         <div class="info-pedido">
           <h3 class="nombre-pedido">${name}</h3>
-          <p class="cantidad-pedido">${cantidad}</p>
+          <p class="cantidad-pedido">Cantidad : <strong> ${cantidad} </strong> </p>
           <p class="precio-pedido">$${subTotal}</p>
         </div>
       </div> `;
     divPedido.innerHTML = pedidoHTML;
 
     // Promocion
-    const promo = document.createElement("p");
-    promo.classList.add("codigo-promo");
-    promo.textContent = "Ingresa un codigo de promocion";
+    const divPromo = document.createElement("div");
+    divPromo.classList.add("codigo-promo");
+    const promoSpan = document.createElement("span");
+    promoSpan.textContent = "Código de promocion";
+    const promoInput = document.createElement("input");
+    promoInput.classList.add("input-promo");
+    divPromo.append(promoSpan, promoInput)
     // Pedido
     const divTotalPedido = document.createElement("div");
     divTotalPedido.classList.add("div-total-pedido");
@@ -84,7 +88,7 @@ function checkoutHTML(products) {
     liEnvio.append(pCategoriaEnvio, pEnvio);
     liTotal.append(pCategoriaTotal, pTotal);
     ulTotal.append(liSub, liEnvio, liTotal);
-    divTotalPedido.append(promo, ulTotal);
+    divTotalPedido.append(divPromo, ulTotal);
     divPedido.append(divTotalPedido);
 
     console.log(ids);
