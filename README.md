@@ -1,4 +1,4 @@
-# Blog 
+# Tienda Virtual con Mercado Pago 
 
 ## Instalación local
 
