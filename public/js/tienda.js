@@ -1,4 +1,4 @@
-import { getProductosLocal, fetchProducts, productList, createElementHtml, total, subTotal } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts, productList, createElementHtml,  subTotal } from "./helpers.mjs";
 // Pagina Principal
 
 // Productos
@@ -31,75 +31,59 @@ ocultarCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'none'
 })
 
+let total = 0
+let subTotalProductos = 0
+
+
+function calcularSubTotalProducto(product) {
+  let subTotalProducto = product.cantidad * product.price
+  return subTotalProducto
+}
+
+let cuenta = 0
 ///***  Agregar productos al Carrito ***///
 function add(productId, price) {
   // Traer el producto que coincida con el id del producto de la BD
   let product = productList.find((p) => p.id == productId)
-  const getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
-  console.log(getProductActualizar)
-  let dataSubtotal = JSON.parse(localStorage.getItem(`subtotal`)) 
-  
-  if(!getProductActualizar) {
+  let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
+
+  if(getProductActualizar) {
+    getProductActualizar.stock--
+    getProductActualizar.cantidad++
+    localStorage.removeItem(`producto-${productId}`) 
+    localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
+    const getIds = JSON.parse(localStorage.getItem("productoIds"))
+    ids = getIds
+    
+    const inputPrecio = document.querySelector(`[data-id="price-${ productId }"]`).innerHTML = calcularSubTotalProducto(getProductActualizar)
+    console.log(inputPrecio)
+    const inputCantidad =  document.querySelector(`[data-id="input-${ productId }"]`).value = getProductActualizar.cantidad
+  } 
+  else {
+    // Si hay otras id de otros productos
+    ids.push(productId)
     product.stock--
     product.cantidad++
     order.items.push(product)
-
-    const existe = ids.find((id) => id == productId)
-    if(!existe) {
-      const getIds = JSON.parse(localStorage.getItem("productoIds"))
-      getIds ? ids=[...getIds, productId] : ids.push(productId)
-    }
-
     productoLocalStorage = product;
     localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
-    console.log(productoLocalStorage);
-
-   
-    //const getIds = JSON.parse(localStorage.getItem("productoIds"))
     addCarritoHTML(product);
+  }
 
-    if(dataSubtotal) {
-      // inputCarrito.value = getProductActualizar.cantidad;
-      const total =  dataSubtotal + product.price 
-      console.log(total)
-      subTotalHtml.innerHTML = dataSubtotal + product.price 
-      localStorage.setItem(`subtotal`, JSON.stringify(total));
-    } else {
-      localStorage.setItem(`subtotal`, JSON.stringify(product.price));
-      inputCarrito.value = product.price
-      subTotalHtml.innerHTML = product.price
+let cuenta = 0 
+  for (let index = 0; index < ids.length; index++) {
+    const getProduct = JSON.parse(localStorage.getItem(`producto-${ ids[index] }`))  
+    console.log(getProduct)
+    let precio = calcularSubTotalProducto(getProduct)
+    cuenta += precio
+    //console.log(cuenta)
+    subTotalHtml.innerHTML = `$${cuenta}`
+  }
   
-    }
-  } 
-  else {
-    console.log(getProductActualizar)
-    getProductActualizar.stock--
-    getProductActualizar.cantidad++
-    console.log(productoStorage)
-    localStorage.removeItem(`producto-${productId}`) 
-    localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
-    
-    let inputCarrito = document.querySelector(`[data-id="input-${getProductActualizar.id}"]`);
-    // TENGO QUE OBTENER LA LISTA DE PRODUCTOS EN LOCALSTORAGE
-
-    
-    if(dataSubtotal) {
-      // inputCarrito.value = getProductActualizar.cantidad;
-      const newAlgo =  (dataSubtotal) + (getProductActualizar.price * getProductActualizar.cantidad)
-      console.log(newAlgo)
-       subTotalHtml.innerHTML = (dataSubtotal) + (getProductActualizar.price * getProductActualizar.cantidad)
-    } else {
-      localStorage.setItem(`subtotal`, JSON.stringify(total));
-      inputCarrito.value = total
-      subTotalHtml.innerHTML = total
-  
-    }
-
-   
-    }
   borrarItemCarrito();
 }
+
 
 // Construir HTML de los productos
 function renderProductosHtml(registros) {
@@ -121,7 +105,7 @@ function renderProductosHtml(registros) {
 }
 
 ///***  Crear el HTML del Carrito ***///
-function addCarritoHTML(product, getIds) {
+function addCarritoHTML(product, subtotal) {
   let { image, name, price, id, cantidad } = product
 
   // Caja Producto
@@ -130,7 +114,7 @@ function addCarritoHTML(product, getIds) {
   // Seccion Contenido
   const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
   const nombreProducto = createElementHtml("p", [], name)
-  const precioProducto = createElementHtml("p", [], price)
+  const precioProducto = createElementHtml("p", [], price, `price-${id}`)
   divContenidoCarrito.append(nombreProducto, precioProducto);
 
   // Seccion Stock
@@ -150,11 +134,8 @@ function addCarritoHTML(product, getIds) {
   productosCarrito.append(productoCarrito);
 
   articulos++
-  numbCompras.textContent = articulos
-  sumaSub = sumaSub + price;
-  console.log(sumaSub)
-  
-  subTotalHtml.textContent = sumaSub;
+  numbCompras.textContent = articulos  
+//subTotalHtml.textContent = `$${subtotal}` ;
 }
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
@@ -166,6 +147,7 @@ function borrarItemCarrito() {
       console.log(e.target.parentNode.parentNode)
       e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${id[1]}"]`))
       localStorage.removeItem(`producto-${id[1]}`)
+      localStorage.removeItem(`subtotal`)
 
       const getIds = JSON.parse(localStorage.getItem("productoIds"))
       ids = getIds.filter((elementId) => elementId != Number(id[1]))
@@ -288,7 +270,7 @@ filtroPrecio.addEventListener("click", (e) => {
       } 
 
       let mostrarPrecio = document.querySelector("#mostrar-precio")
-      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
+      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 1500` 
       //productosHTML.innerHTML = filtradoHTML;
     });
     
@@ -338,3 +320,4 @@ window.onload = async () => {
     borrarItemCarrito()
   })
 }
+

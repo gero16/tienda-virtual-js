@@ -48,7 +48,7 @@ export function createElementHtml (element, classname, content, dataset, src) {
     return elementoEtiqueta
 }
 
-function htmlCarritoLocalStorage () {
+export function htmlCarritoLocalStorage () {
   if (datosProductosAgregados) { 
     document.querySelector(".producto-vacio").innerHTML = ""
     datosProductosAgregados.forEach((product) => {
@@ -84,7 +84,7 @@ function htmlCarritoLocalStorage () {
       // Me aparecen 2 producto-carrito's creados antes en el HTML
       numbCompras.textContent = articulos;
       sumaSub = product.cantidad * product.price
-      document.querySelector(`[data-id="price-${product.id}"]`).textContent= sumaSub
+      document.querySelector(`[data-id="price-${product.id}"]`).textContent=  `$${sumaSub}`;
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
       localStorage.setItem(`subtotal`, JSON.stringify(total));
