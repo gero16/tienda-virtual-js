@@ -172,5 +172,15 @@
       grid-template-columns: 1fr 1fr 1fr 1fr;
     }
   }
+
+  @media (min-width: 1380px) {
+    .categoria {
+      height: 700px;
+      
+    }
+    .categoria-4 {
+      background-size: cover;
+    }
+  }
   
   
