@@ -189,7 +189,7 @@ footer img {
   */
   background-color: rgb(24, 22, 22);
   color: white;
-  padding: 50px 0px 50px 0px;
+  padding: 36px 0px 36px 0px;
   font-family: "Rubik", sans-serif;
   font-size: 22px;
   font-weight: 300;
@@ -266,8 +266,8 @@ footer img {
 }
 
 .img-comprar {
-  width: 70px;
-  height: 95px;
+  width: 90px;
+  height: 90px;
   margin: 5px auto 5px auto;
 }
 
