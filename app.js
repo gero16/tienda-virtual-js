@@ -15,7 +15,7 @@ const mercadopago = require('mercadopago')
 // Agrega credenciales
 mercadopago.configure({
   access_token:
-    'APP_USR-3488859500794386-010715-9adf8e40ec5dd43f090030975e9e633f-370206533',
+    'TEST-3488859500794386-010715-320f2dd75257891352172318a1ed84fd-370206533',
 })
 
 // process.env.PORT - Si el servidor me esta dando un puerto tome ese
