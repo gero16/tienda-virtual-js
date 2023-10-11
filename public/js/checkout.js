@@ -25,13 +25,14 @@ window.onload = async () => {
 
 };
 
-let ids = JSON.parse(localStorage.getItem(`productoIds`)) 
+let ids = []
 
 function checkoutHTML(products) {
   let pedidoHTML = "";
 
   productoIds.forEach(id => {
     let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
+    console.log(data)
     if(data) datosProductosAgregados.push(data)
   })
 
@@ -40,7 +41,8 @@ function checkoutHTML(products) {
     subTotal =  price * cantidad
     sumaSubTotal = sumaSubTotal + price * cantidad;
     total = sumaSubTotal + envio
-    ids.push(id)
+    const idsCantidad = [id, cantidad]
+    ids.push(idsCantidad)
     pedidoHTML += `
       <div class="producto-pedido">
         <img class="imagen-pedido" src="${image}" alt="foto-${name}" />

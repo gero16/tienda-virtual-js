@@ -147,7 +147,6 @@ function borrarItemCarrito() {
       console.log(e.target.parentNode.parentNode)
       e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${id[1]}"]`))
       localStorage.removeItem(`producto-${id[1]}`)
-      localStorage.removeItem(`subtotal`)
 
       const getIds = JSON.parse(localStorage.getItem("productoIds"))
       ids = getIds.filter((elementId) => elementId != Number(id[1]))

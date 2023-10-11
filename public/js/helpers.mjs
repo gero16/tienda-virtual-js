@@ -87,10 +87,8 @@ export function htmlCarritoLocalStorage () {
       document.querySelector(`[data-id="price-${product.id}"]`).textContent=  `$${sumaSub}`;
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
-      localStorage.setItem(`subtotal`, JSON.stringify(total));
     });
-  } else {
-  }
+  } 
 }
 
 export function traerIdsLocalStorage (ids) {

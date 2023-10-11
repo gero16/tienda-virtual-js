@@ -1,5 +1,6 @@
 const mercadopago = require('mercadopago/lib/mercadopago')
 const Producto = require('../models/products-models')
+const colors = require('colors')
 
 const productosGet = async (req, res) => {
   try {
@@ -31,8 +32,8 @@ const checkoutPost = async (req, res) => {
 
 const productosPost = async (req, res) => {
   const body = req.body
-  console.log(body)
   ids = body[1]
+  console.log(colors.bgBlue(ids))
 
   // Leer archivos de la BD -
   const registros = await Producto.find().lean()
@@ -52,19 +53,28 @@ const productosPost = async (req, res) => {
 
   // Recorrer el arreglo de ids para encontrar coincidencia en la BD y restar Stock
   ids.forEach((id) => {
-    const productAct = registros.find((p) => p.id == id)
+    console.log(colors.bgGreen(id))
 
+    const productAct = registros.find((p) => p.id === id[0])
+    productAct.cantidad = id[1]
+    console.log(colors.bgRed(productAct))
+
+    
+   //productAct.cantidad = id[1]
     console.log(`Este es el product Act ${productAct}`)
 
     // Agregar la preferencia de MP
     preference.items.push({
       title: productAct.name,
       unit_price: productAct.price,
-      quantity: 1,
+      quantity: productAct.cantidad,
     })
 
     const idMongo = productAct._id.valueOf()
     console.log(idMongo)
+
+  })
+
 
     // Traer el _id de la base y eliminarlo - Para agregar el producto actualizado
     const actualizarStock = async () => {
@@ -93,7 +103,8 @@ const productosPost = async (req, res) => {
     }
     // [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
     actualizarStock() // Ejecutandolo fuera del forEach me tiraba ese error
-  })
+  
+
 
   const mpPreferencias = async () => {
     // LLamar a mercado pago y mandarle las preferencias
@@ -105,6 +116,7 @@ const productosPost = async (req, res) => {
     res.send({ preferenceId })
   }
   mpPreferencias()
+  
 }
 
 module.exports = {
