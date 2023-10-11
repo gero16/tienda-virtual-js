@@ -62,7 +62,7 @@ export function htmlCarritoLocalStorage () {
       // Seccion Contenido
       const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
       const nombreProducto = createElementHtml("p", [], product.name)
-      const precioProducto = createElementHtml("p", [], product.price, `price-${product.id}`)
+      const precioProducto = createElementHtml("p", [], `$${ product.price }`, `price-${product.id}`)
       divContenidoCarrito.append(nombreProducto, precioProducto);
 
       // Seccion Stock
