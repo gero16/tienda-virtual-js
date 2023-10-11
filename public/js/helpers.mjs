@@ -67,8 +67,8 @@ export function htmlCarritoLocalStorage () {
 
       // Seccion Stock
       const divStock = createElementHtml("div", ["stock"])
-      const spanRestar = createElementHtml("span", ["restar"], "-")
-      const spanSumar = createElementHtml("span", ["sumar"], "+")
+      const spanRestar = createElementHtml("span", ["restar"], "-", `restar-${product.id}`)
+      const spanSumar = createElementHtml("span", ["sumar"], "+", `sumar-${product.id}`)
       const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${product.id}`)
       inputCarrito.value = product.cantidad;
       divStock.append(spanRestar, inputCarrito, spanSumar);
@@ -112,24 +112,70 @@ export function getProductosLocal() {
       console.log(algo)
 
     })
-    promise.then(function () {
-    const inputCarrito = document.querySelectorAll(".input-carrito");
-    const sumar = document.querySelectorAll(".sumar");
-    // Agregar Unidades del Carrito
-    for (let i = 0; i <= sumar.length - 1; i++) {
-      sumar[i].addEventListener("click", () => {
-        inputCarrito[i].value++;
-      });
-    }
-  
-    const restar = document.querySelectorAll(".restar");
-    // Restar Unidades al Carrito
-    for (let i = 0; i <= restar.length - 1; i++) {
-      restar[i].addEventListener("click", () => {
-        inputCarrito[i].value--;
-      });
-    }
-  })
+   
 }
 
-  
+export function calcularSubTotalProducto(product) {
+  let subTotalProducto = product.cantidad * product.price
+  return subTotalProducto
+}
+export function mostrarSubtotalHtml () {
+  let cuenta = 0
+  const getIds = JSON.parse(localStorage.getItem("productoIds"))
+  for (let index = 0; index < getIds.length; index++) {
+    const getProduct = JSON.parse(localStorage.getItem(`producto-${ ids[index] }`))  
+    let precio = calcularSubTotalProducto(getProduct)
+    cuenta += precio
+    subTotalHtml.innerHTML = `$${cuenta}`
+  }
+}
+
+export function mostrarNumeroArticulosHtml () {
+  const getIds = JSON.parse(localStorage.getItem("productoIds"))
+  if(getIds) numbCompras.textContent = getIds.length
+  else numbCompras.textContent = 0  
+ 
+}
+
+
+export function eventoSumar () {
+  const inputCarrito = document.querySelectorAll(".input-carrito");
+  const btnsSumar = document.querySelectorAll(".sumar")
+  if(btnsSumar) {
+    for (let index = 0; index < btnsSumar.length; index++) {
+      btnsSumar[index].addEventListener("click", (e)=> {
+        inputCarrito[index].value++;
+        const idProducto = (e.target.dataset.id).split("-") 
+        let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ idProducto[1] }`))
+        getProductActualizar.cantidad =  Number(inputCarrito[index].value)
+        localStorage.setItem(`producto-${idProducto[1] }`, JSON.stringify(getProductActualizar));
+        console.log(getProductActualizar)
+        const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
+        const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
+        mostrarSubtotalHtml()
+      })
+    }
+  }
+} 
+
+export function eventoRestar () {
+  const inputCarrito = document.querySelectorAll(".input-carrito");
+  const btnsRestar = document.querySelectorAll(".restar")
+  if(btnsRestar) {
+    console.log(btnsRestar)
+    for (let index = 0; index < btnsRestar.length; index++) {
+      btnsRestar[index].addEventListener("click", (e)=> {
+        console.log(e.target)
+        inputCarrito[index].value--;
+        const idProducto = (e.target.dataset.id).split("-") 
+        let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ idProducto[1] }`))
+        getProductActualizar.cantidad =  Number(inputCarrito[index].value)
+        localStorage.setItem(`producto-${idProducto[1] }`, JSON.stringify(getProductActualizar));
+        console.log(getProductActualizar)
+        const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
+        const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
+        mostrarSubtotalHtml()
+      })
+    }
+  }
+} 

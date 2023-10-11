@@ -1,4 +1,7 @@
-import { getProductosLocal, fetchProducts, productList, createElementHtml,  subTotal } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts, productList, calcularSubTotalProducto,
+  createElementHtml, subTotal, mostrarNumeroArticulosHtml, mostrarSubtotalHtml,
+  eventoRestar, eventoSumar
+} from "./helpers.mjs";
 // Pagina Principal
 
 // Productos
@@ -20,8 +23,6 @@ let ids = []
 let order = {
   items: [],
 };
-let sumaSub = 0;
-let articulos = 0;
 
 iconoCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'block'
@@ -31,14 +32,7 @@ ocultarCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'none'
 })
 
-let total = 0
-let subTotalProductos = 0
 
-
-function calcularSubTotalProducto(product) {
-  let subTotalProducto = product.cantidad * product.price
-  return subTotalProducto
-}
 
 let cuenta = 0
 ///***  Agregar productos al Carrito ***///
@@ -76,6 +70,8 @@ function add(productId, price) {
   mostrarSubtotalHtml()
   mostrarNumeroArticulosHtml()
   borrarItemCarrito();
+  eventoSumar()
+  eventoRestar()
 }
 
 
@@ -113,8 +109,8 @@ function addCarritoHTML(product, subtotal) {
 
   // Seccion Stock
   const divStock = createElementHtml("div", ["stock"])
-  const spanRestar = createElementHtml("span", ["restar"], "-")
-  const spanSumar = createElementHtml("span", ["sumar"], "+")
+  const spanRestar = createElementHtml("span", ["restar"], "-", `restar-${id}`)
+  const spanSumar = createElementHtml("span", ["sumar"], "+", `sumar-${id}`)
   const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${id}`)
   inputCarrito.value = 1
   divStock.append(spanRestar, inputCarrito, spanSumar)
@@ -308,6 +304,11 @@ filtroPrecio.addEventListener("click", (e) => {
   }
 })
 
+
+
+
+
+
 window.onload = async () => {
   const productos = await fetchProducts()
   renderProductosHtml(productos)
@@ -318,24 +319,8 @@ window.onload = async () => {
   })
   .then(function() {
     borrarItemCarrito()
+    eventoRestar() 
+    eventoSumar()
   })
 }
 
-function mostrarSubtotalHtml () {
-  let cuenta = 0
-  const getIds = JSON.parse(localStorage.getItem("productoIds"))
-  for (let index = 0; index < getIds.length; index++) {
-    const getProduct = JSON.parse(localStorage.getItem(`producto-${ ids[index] }`))  
-    let precio = calcularSubTotalProducto(getProduct)
-    cuenta += precio
-    subTotalHtml.innerHTML = `$${cuenta}`
-  }
-}
-
-function mostrarNumeroArticulosHtml () {
-  const getIds = JSON.parse(localStorage.getItem("productoIds"))
-  console.log(getIds.length)
-  if(getIds) numbCompras.textContent = getIds.length
-  else numbCompras.textContent = 0  
- 
-}
