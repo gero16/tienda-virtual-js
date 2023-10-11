@@ -68,10 +68,13 @@ function add(productId, price) {
     productoLocalStorage = product;
     localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
+
+    mostrarNumeroArticulosHtml()
     addCarritoHTML(product);
   }
 
   mostrarSubtotalHtml()
+  mostrarNumeroArticulosHtml()
   borrarItemCarrito();
 }
 
@@ -124,8 +127,7 @@ function addCarritoHTML(product, subtotal) {
   productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
   productosCarrito.append(productoCarrito);
 
-  articulos++
-  numbCompras.textContent = articulos  
+  mostrarNumeroArticulosHtml()
 }
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
@@ -156,31 +158,21 @@ function borrarItemCarrito() {
         localStorage.removeItem("productoIds")
         ids.length > 0 ?  localStorage.setItem(`productoIds`, JSON.stringify(ids)) : ""
         
-        console.log(btnBorrar.length)
-        articulos--
-        if (articulos == -1) numbCompras.textContent = 0
-        numbCompras.textContent = articulos
-        console.log(articulos)
+        mostrarNumeroArticulosHtml()
+        
       })
 
       function restarSubtotal (id) {
         const obtenerCosto = document.querySelector(`[data-id="price-${id[1]}"]`).textContent.split("$")
+        console.log(obtenerCosto)
         if(obtenerCosto) {
-          console.log(obtenerCosto)
           const costo = parseInt(obtenerCosto[1])
-          console.log(costo)
-          console.log(subtotal)
           resta = subtotal - costo
-          console.log(resta)
           subTotalHtml.innerHTML = `$${resta}`
         }
-        
       }
-      
-      
-    })
+    })}
   }
-}
 
 ///*** FILTROOOOOOOOOOS ***///
 let filtradoHTML = "";
@@ -334,9 +326,16 @@ function mostrarSubtotalHtml () {
   const getIds = JSON.parse(localStorage.getItem("productoIds"))
   for (let index = 0; index < getIds.length; index++) {
     const getProduct = JSON.parse(localStorage.getItem(`producto-${ ids[index] }`))  
-    console.log(getIds.length)
     let precio = calcularSubTotalProducto(getProduct)
     cuenta += precio
     subTotalHtml.innerHTML = `$${cuenta}`
   }
+}
+
+function mostrarNumeroArticulosHtml () {
+  const getIds = JSON.parse(localStorage.getItem("productoIds"))
+  console.log(getIds.length)
+  if(getIds) numbCompras.textContent = getIds.length
+  else numbCompras.textContent = 0  
+ 
 }
