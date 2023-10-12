@@ -16,6 +16,9 @@ router.post('/agregar-producto', async (req, res) => {
     })
 
     await producto.save();
+    if(!producto) {
+        console.log("holaa")
+    }
     res.status(200).json({"Producto Agregado": `id: ${producto.id} - nombre : ${producto.name}`})
 })
 

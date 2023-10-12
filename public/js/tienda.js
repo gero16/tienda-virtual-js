@@ -1,8 +1,9 @@
 import { getProductosLocal, fetchProducts, productList, calcularSubTotalProducto,
   createElementHtml, subTotal, mostrarNumeroArticulosHtml, mostrarSubtotalHtml,
-  eventoRestar, eventoSumar
+   mostrarSubtotalPorProducto, eventoRestarEnTodos, eventoSumarEnTodos, eventoSumar, eventoRestar
 } from "./helpers.mjs";
 // Pagina Principal
+
 
 // Productos
 const productosHTML = document.querySelector(".productos");
@@ -16,13 +17,14 @@ const numbCompras = document.querySelector('.numero-compras')
 const subTotalHtml = document.querySelector('.sub-total')
 
 // LocalStorage
-let productoStorage = ''
 let productoLocalStorage = []
 
 let ids = []
 let order = {
   items: [],
 };
+
+
 
 iconoCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'block'
@@ -32,11 +34,9 @@ ocultarCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'none'
 })
 
-
-
 let cuenta = 0
 ///***  Agregar productos al Carrito ***///
-function add(productId, price) {
+function agregarProducto(productId, price) {
   // Traer el producto que coincida con el id del producto de la BD
   let product = productList.find((p) => p.id == productId)
   let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ productId }`)) 
@@ -48,9 +48,8 @@ function add(productId, price) {
     getProductActualizar.cantidad++
     localStorage.removeItem(`producto-${productId}`) 
     localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
-    const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
-    const inputPrecio = document.querySelector(`[data-id="price-${ productId }"]`).innerHTML = `$${ subTotalProducto }` 
-    console.log(inputPrecio)
+
+    mostrarSubtotalPorProducto(getProductActualizar)
     const inputCantidad =  document.querySelector(`[data-id="input-${ productId }"]`).value = getProductActualizar.cantidad
   } 
 
@@ -64,16 +63,15 @@ function add(productId, price) {
     localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
 
-    mostrarNumeroArticulosHtml()
     addCarritoHTML(product);
   }
 
   
+  eventoRestar(productId)
+  eventoSumar(productId)
   mostrarNumeroArticulosHtml()
   borrarItemCarrito()
   mostrarSubtotalHtml()
-  eventoSumar()
-  eventoRestar()
 }
 
 
@@ -92,8 +90,13 @@ function renderProductosHtml(registros) {
     divProducto.append(img, nombre, precio, button)
     productosHTML.append(divProducto)
   })
-  const btns = document.querySelectorAll(".add")
-  btns.forEach(element => element.addEventListener("click", (e) => add(e.target.dataset.id) ));
+
+  const btns = document.querySelectorAll(".add") 
+  btns.forEach(btnAgregar => { 
+    btnAgregar.addEventListener("click", (e) => { 
+      agregarProducto(e.target.dataset.id) }) 
+      
+  })
 }
 
 ///***  Crear el HTML del Carrito ***///
@@ -305,11 +308,6 @@ filtroPrecio.addEventListener("click", (e) => {
   }
 })
 
-
-
-
-
-
 window.onload = async () => {
   const productos = await fetchProducts()
   renderProductosHtml(productos)
@@ -318,11 +316,13 @@ window.onload = async () => {
     resolve( getProductosLocal())
   })
   .then(function(e) {
-    mostrarSubtotalHtml()
+    //mostrarSubtotalHtml()
     mostrarNumeroArticulosHtml()
     borrarItemCarrito()
-    eventoRestar() 
-    eventoSumar()
+    eventoRestarEnTodos() 
+    eventoSumarEnTodos()
   })
 }
+
+
 
