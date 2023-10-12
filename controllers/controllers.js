@@ -5,6 +5,16 @@ const colors = require('colors')
 const productosGet = async (req, res) => {
   try {
     const registros = await Producto.find().lean()
+    const registrosOrdenados = registros.sort(function (a, b) {
+      if (a.id > b.id) {
+        return 1;
+      }
+      if (a.id < b.id) {
+        return -1;
+      }
+      return 0;
+    });
+    //console.log(colors.bgRed(registrosOrdenados))
     let msg = 'Registros Encontrados'
 
     if (!registros.length) {
@@ -57,8 +67,7 @@ const productosPost = async (req, res) => {
 
     const productAct = registros.find((p) => p.id === id[0])
     productAct.cantidad = id[1]
-    console.log(colors.bgRed(productAct))
-
+    //console.log(colors.bgRed(productAct))
     
    //productAct.cantidad = id[1]
     console.log(`Este es el product Act ${productAct}`)
