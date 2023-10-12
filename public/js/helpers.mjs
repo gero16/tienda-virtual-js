@@ -82,11 +82,13 @@ export function htmlCarritoLocalStorage () {
       productosCarrito.append(productoCarrito);
 
       // Me aparecen 2 producto-carrito's creados antes en el HTML
+      /*
       numbCompras.textContent = articulos;
       sumaSub = product.cantidad * product.price
       document.querySelector(`[data-id="price-${product.id}"]`).textContent=  `$${sumaSub}`;
       total = total + sumaSub
       subTotalHtml.innerHTML = `$${total}`;
+      */
     });
   } 
 }
@@ -116,18 +118,29 @@ export function getProductosLocal() {
 }
 
 export function calcularSubTotalProducto(product) {
+  console.log(product)
+
   let subTotalProducto = product.cantidad * product.price
   return subTotalProducto
 }
+
+
+
 export function mostrarSubtotalHtml () {
   let cuenta = 0
   const getIds = JSON.parse(localStorage.getItem("productoIds"))
-  for (let index = 0; index < getIds.length; index++) {
-    const getProduct = JSON.parse(localStorage.getItem(`producto-${ ids[index] }`))  
-    let precio = calcularSubTotalProducto(getProduct)
-    cuenta += precio
-    subTotalHtml.innerHTML = `$${cuenta}`
+
+  if(getIds) {
+  
+    for (let index = 0; index < getIds.length; index++) {
+      console.log(getIds[index])
+      const getProduct = JSON.parse(localStorage.getItem(`producto-${ getIds[index] }`))  
+      let precio = calcularSubTotalProducto(getProduct)
+      cuenta += precio
+      subTotalHtml.innerHTML = `$${cuenta}`
+    }
   }
+  if(!getIds) subTotalHtml.innerHTML = `$0`
 }
 
 export function mostrarNumeroArticulosHtml () {
@@ -171,7 +184,7 @@ export function eventoRestar () {
         let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ idProducto[1] }`))
         getProductActualizar.cantidad =  Number(inputCarrito[index].value)
         localStorage.setItem(`producto-${idProducto[1] }`, JSON.stringify(getProductActualizar));
-        console.log(getProductActualizar)
+
         const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
         const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
         mostrarSubtotalHtml()

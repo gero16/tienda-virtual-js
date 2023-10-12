@@ -53,7 +53,8 @@ function add(productId, price) {
     console.log(inputPrecio)
     const inputCantidad =  document.querySelector(`[data-id="input-${ productId }"]`).value = getProductActualizar.cantidad
   } 
-  else {
+
+  if(!getProductActualizar) {
     // Si hay otras id de otros productos
     ids.push(productId)
     product.stock--
@@ -67,9 +68,10 @@ function add(productId, price) {
     addCarritoHTML(product);
   }
 
-  mostrarSubtotalHtml()
+  
   mostrarNumeroArticulosHtml()
-  borrarItemCarrito();
+  borrarItemCarrito()
+  mostrarSubtotalHtml()
   eventoSumar()
   eventoRestar()
 }
@@ -131,7 +133,6 @@ function borrarItemCarrito() {
   const btnBorrar = document.querySelectorAll('.btn-borrar') 
   let resta = 0
   
-
   for (let i = 0; i <= btnBorrar.length - 1; i++) {
     btnBorrar[i].addEventListener('click', (e) => {
       const obtenerSubtotal = document.querySelector(".sub-total").textContent.split("$")
@@ -315,9 +316,10 @@ window.onload = async () => {
 
   new Promise (function(resolve, reject) {
     resolve( getProductosLocal())
-    reject(console.log("Error"))
   })
-  .then(function() {
+  .then(function(e) {
+    mostrarSubtotalHtml()
+    mostrarNumeroArticulosHtml()
     borrarItemCarrito()
     eventoRestar() 
     eventoSumar()
