@@ -30,12 +30,14 @@
 .pagina-principal {
   background-color: rgb(255, 255, 255);
   border-radius: 10px;
+  /*
   max-width: 1400px;
   min-height: 1000px;
+  */
 }
 
 .div-filtros {
-  margin: 150px 0px 30px 0px;
+  margin: 180px 0px 30px 0px;
   padding: 10px;
   min-width: 165px;
 }
@@ -62,6 +64,7 @@
   border-left: 1px solid rgb(206, 201, 201);
   border-right: 1px solid rgb(206, 201, 201);
   margin: 0px 0px 10px 0px;
+
 }
 
 .precio-principal {
@@ -69,11 +72,13 @@
 }
 .precios-titulo {
   font-weight: 500;
+  font-size: larger;
   margin-bottom: 10px;
 }
 
 #mostrar-precio {
   margin-bottom: 5px;
+  font-size: large;
 }
 
 .filtro-precio-select {
@@ -155,11 +160,13 @@
 
 .titulo-categoria {
   margin: 30px 0px 10px 0px;
+  font-size: larger;
 }
 
 .categoria-filtro {
   font-weight: 400;
   margin: 0px 0px 0px 2px;
+  font-size: large;
 }
 
 .filtro-categorias {
@@ -188,35 +195,9 @@
 .productos {
   padding: 10px;
   border-radius: 10px;
-  margin: 180px 0px 20px 0px;
+ 
 }
 
-/* Hacelo escalado sino no funciona PELOTUDO */
-@media (min-width: 610px) {
-  .productos {
-    display: grid;
-    grid-template-columns: 1fr;
-    overflow: auto;
-  }
-}
-
-/* Hacelo escalado sino no funciona PELOTUDO */
-@media (min-width: 820px) {
-  .productos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: auto;
-  }
-}
-
-/* Desde que es mayor a 1200px */
-@media (min-width: 1200px) {
-  .productos {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    overflow: auto;
-  }
-}
 
 /** Parte productos **/
 .producto {
@@ -224,14 +205,14 @@
   background-color: white;
   border-radius: 10px;
   margin: 0px auto 5px auto;
-  width: 200px;
-  height: 375px;
+  width: 180px;
+  height: 355px;
   transition: 0.5s;
 }
 
 .producto img {
-  width: 220px;
-  height: 220px;
+  width: 200px;
+  height: 200px;
   margin: 0px 0px 10px 0px;
   border-radius: 8px;
   transition: all 0.5s;
@@ -352,3 +333,126 @@ input[type=range]::-ms-fill-lower {
 input[type=range]::-ms-fill-upper {
   background-color: black;
 } 
+
+.input-precio {
+  width: 90%;
+}
+
+/* Hacelo escalado sino no funciona PELOTUDO */
+@media (max-width: 619px) {
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 620px) {
+  .productos {
+    margin: 180px 0px 20px 0px;
+  }
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: auto;
+  }
+}
+
+@media (min-width: 750px) {
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    overflow: auto;
+  }
+  .producto {
+    width: 160px;
+    height: 285px;
+  }
+  
+  .producto img {
+    width: 170px;
+    height: 170px;
+  }
+}
+
+@media (min-width: 920px) {
+  
+  .producto {
+    width: 170px;
+    height: 305px;
+  }
+  
+  .producto img {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+@media (min-width: 1000px) {
+  
+  .producto {
+    width: 190px;
+    height: 325px;
+  }
+  
+  .producto img {
+    width: 210px;
+    height: 210px;
+  }
+}
+/* Desde que es mayor a 1200px */
+@media (min-width: 1200px) {
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    overflow: auto;
+  }
+  .producto {
+    width: 160px;
+    height: 305px;
+  }
+  
+  .producto img {
+    width: 190px;
+    height: 190px;
+  }
+}
+
+@media (min-width: 1300px) {
+  .producto {
+    width: 170px;
+    height: 315px;
+  }
+  
+  .producto img {
+    width: 200px;
+    height: 200px;
+  }
+}
+@media (min-width: 1480px) {
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    overflow: auto;
+  }
+
+  .producto {
+    width: 220px;
+    height: 375px;
+  }
+  
+  .producto img {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+
+@media (min-width: 1700px) {
+  .productos {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    overflow: auto;
+    gap: 15px;
+  }
+ 
+  
+}
