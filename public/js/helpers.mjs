@@ -32,7 +32,7 @@ export function llenarIds () {
 
 export function createElementHtml (element, classname, content, dataset, src) {
     const elementoEtiqueta = document.createElement(`${element}`);
-  
+
     if(classname) {
         classname.forEach(clase => {
             elementoEtiqueta.className += `${clase} `
@@ -44,7 +44,8 @@ export function createElementHtml (element, classname, content, dataset, src) {
     if(dataset) elementoEtiqueta.dataset.id = `${dataset}`
   
     if(src) elementoEtiqueta.src = src
-  
+
+   
     return elementoEtiqueta
 }
 
@@ -129,9 +130,7 @@ export function calcularSubTotalProducto(product) {
 export function mostrarSubtotalHtml () {
   let cuenta = 0
   const getIds = JSON.parse(localStorage.getItem("productoIds"))
-
   if(getIds) {
-  
     for (let index = 0; index < getIds.length; index++) {
       console.log(getIds[index])
       const getProduct = JSON.parse(localStorage.getItem(`producto-${ getIds[index] }`))  
@@ -154,8 +153,10 @@ export function mostrarNumeroArticulosHtml () {
 export function eventoSumar () {
   const inputCarrito = document.querySelectorAll(".input-carrito");
   const btnsSumar = document.querySelectorAll(".sumar")
+
   if(btnsSumar) {
     for (let index = 0; index < btnsSumar.length; index++) {
+
       btnsSumar[index].addEventListener("click", (e)=> {
         inputCarrito[index].value++;
         const idProducto = (e.target.dataset.id).split("-") 
@@ -167,6 +168,8 @@ export function eventoSumar () {
         const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
         mostrarSubtotalHtml()
       })
+
+
     }
   }
 } 
@@ -175,11 +178,10 @@ export function eventoRestar () {
   const inputCarrito = document.querySelectorAll(".input-carrito");
   const btnsRestar = document.querySelectorAll(".restar")
   if(btnsRestar) {
-    console.log(btnsRestar)
     for (let index = 0; index < btnsRestar.length; index++) {
+
       btnsRestar[index].addEventListener("click", (e)=> {
-        console.log(e.target)
-        inputCarrito[index].value--;
+        inputCarrito[index].value--
         const idProducto = (e.target.dataset.id).split("-") 
         let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ idProducto[1] }`))
         getProductActualizar.cantidad =  Number(inputCarrito[index].value)
@@ -189,6 +191,7 @@ export function eventoRestar () {
         const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
         mostrarSubtotalHtml()
       })
+
     }
   }
 } 

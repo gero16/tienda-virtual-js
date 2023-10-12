@@ -20,6 +20,7 @@ let bannerActive = {
   cuartoBanner: false,
 }
 
+/*
 setInterval(() => {
   if(bannerActive.primerBanner === true){
     cuartoBanner.style.display = "none"
@@ -47,6 +48,7 @@ setInterval(() => {
   }
  
 }, 7500);
+*/
 
 //bannerActive.tercerBanner == true
 iconoCarrito.addEventListener("click", () => {
