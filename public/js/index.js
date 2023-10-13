@@ -1,4 +1,6 @@
-import { getProductosLocal, fetchProducts } from "./helpers.mjs";
+import { getProductosLocal, fetchProducts,
+   mostrarNumeroArticulosHtml, eventoRestarEnTodos, eventoSumarEnTodos, borrarItemCarrito 
+  } from "./helpers.mjs";
 
 // Pagina Principal
 const homePage = document.querySelector(".pagina-principal");
@@ -60,35 +62,18 @@ ocultarCarrito.addEventListener("click", () => {
 });
 
 
-window.onload = async () => {
-  await fetchProducts()
-  const products = getProductosLocal()
-  console.log(products)
 
-  const inputCarrito = document.querySelectorAll(".input-carrito");
-  const sumar = document.querySelectorAll(".sumar");
-  // Agregar Unidades del Carrito
-  for (let i = 0; i <= sumar.length - 1; i++) {
-    sumar[i].addEventListener("click", () => {
-      inputCarrito[i].value++;
-    });
-  }
 
-  const restar = document.querySelectorAll(".restar");
-  // Restar Unidades al Carrito
-  for (let i = 0; i <= restar.length - 1; i++) {
-    restar[i].addEventListener("click", () => {
-      inputCarrito[i].value--;
-    });
-  }
-
-  const btnBorrar = document.querySelectorAll(".btn-borrar");
-  for (let i = 0; i <= btnBorrar.length - 1; i++) {
-    btnBorrar[i].addEventListener("click", (e) => {
-      console.log(e.target.dataset);
-      let { id } = e.target.dataset;
-      localStorage.removeItem(`producto-carrito${id}`);
-    });
-  }
-};
+window.onload = () => {
+  new Promise (function(resolve, reject) {
+    resolve( getProductosLocal())
+  })
+  .then(function(e) {
+    //mostrarSubtotalHtml()
+    mostrarNumeroArticulosHtml()
+    borrarItemCarrito()
+    eventoRestarEnTodos() 
+    eventoSumarEnTodos()
+  })
+}
 

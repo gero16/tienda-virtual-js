@@ -1,6 +1,7 @@
 import { getProductosLocal, fetchProducts, productList, calcularSubTotalProducto,
   createElementHtml, subTotal, mostrarNumeroArticulosHtml, mostrarSubtotalHtml,
-   mostrarSubtotalPorProducto, eventoRestarEnTodos, eventoSumarEnTodos, eventoSumar, eventoRestar
+   mostrarSubtotalPorProducto, eventoRestarEnTodos, eventoSumarEnTodos, 
+   eventoSumar, eventoRestar, eventoInputCantidad, borrarItemCarrito
 } from "./helpers.mjs";
 // Pagina Principal
 
@@ -33,8 +34,38 @@ iconoCarrito.addEventListener('click', () => {
 ocultarCarrito.addEventListener('click', () => {
   carritoHTML.style.display = 'none'
 })
+///***  Crear el HTML del Carrito ***///
+function addCarritoHTML(product, subtotal) {
+  let { image, name, price, id, cantidad } = product
 
-let cuenta = 0
+  // Caja Producto
+  const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", image)
+    
+  // Seccion Contenido
+  const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
+  const nombreProducto = createElementHtml("p", [], name)
+  const precioProducto = createElementHtml("p", [], `$${price}`, `price-${id}`)
+  divContenidoCarrito.append(nombreProducto, precioProducto);
+
+  // Seccion Stock
+  const divStock = createElementHtml("div", ["stock"])
+  const spanRestar = createElementHtml("span", ["restar"], "-", `restar-${id}`)
+  const spanSumar = createElementHtml("span", ["sumar"], "+", `sumar-${id}`)
+  const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${id}`)
+  inputCarrito.value = 1
+  divStock.append(spanRestar, inputCarrito, spanSumar)
+  divContenidoCarrito.append(divStock)
+
+  // Borrar
+  const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${id}`)
+  // Agregar img, y divs al producto-carrito
+  const productoCarrito = createElementHtml("div", ["producto-carrito"], "", `producto-${product.id}`)
+  productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
+  productosCarrito.append(productoCarrito);
+
+  mostrarNumeroArticulosHtml()
+}
+
 ///***  Agregar productos al Carrito ***///
 function agregarProducto(productId, price) {
   // Traer el producto que coincida con el id del producto de la BD
@@ -69,6 +100,7 @@ function agregarProducto(productId, price) {
   
   eventoRestar(productId)
   eventoSumar(productId)
+  eventoInputCantidad(productId)
   mostrarNumeroArticulosHtml()
   borrarItemCarrito()
   mostrarSubtotalHtml()
@@ -99,80 +131,9 @@ function renderProductosHtml(registros) {
   })
 }
 
-///***  Crear el HTML del Carrito ***///
-function addCarritoHTML(product, subtotal) {
-  let { image, name, price, id, cantidad } = product
-
-  // Caja Producto
-  const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", image)
-    
-  // Seccion Contenido
-  const divContenidoCarrito = createElementHtml("div", ["div-contenido-carrito", "centrar-texto"])
-  const nombreProducto = createElementHtml("p", [], name)
-  const precioProducto = createElementHtml("p", [], `$${price}`, `price-${id}`)
-  divContenidoCarrito.append(nombreProducto, precioProducto);
-
-  // Seccion Stock
-  const divStock = createElementHtml("div", ["stock"])
-  const spanRestar = createElementHtml("span", ["restar"], "-", `restar-${id}`)
-  const spanSumar = createElementHtml("span", ["sumar"], "+", `sumar-${id}`)
-  const inputCarrito = createElementHtml("input", ["input-carrito", "centrar-texto"], "", `input-${id}`)
-  inputCarrito.value = 1
-  divStock.append(spanRestar, inputCarrito, spanSumar)
-  divContenidoCarrito.append(divStock)
-
-  // Borrar
-  const btnBorrar = createElementHtml("span", ["btn-borrar"], "x", `borrar-${id}`)
-  // Agregar img, y divs al producto-carrito
-  const productoCarrito = createElementHtml("div", ["producto-carrito"], "", `producto-${product.id}`)
-  productoCarrito.append(imgCarrito, divContenidoCarrito, btnBorrar);
-  productosCarrito.append(productoCarrito);
-
-  mostrarNumeroArticulosHtml()
-}
 
 ///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
-function borrarItemCarrito() {
-  const btnBorrar = document.querySelectorAll('.btn-borrar') 
-  let resta = 0
-  
-  for (let i = 0; i <= btnBorrar.length - 1; i++) {
-    btnBorrar[i].addEventListener('click', (e) => {
-      const obtenerSubtotal = document.querySelector(".sub-total").textContent.split("$")
-      const subtotal = parseInt(obtenerSubtotal[1])
-      console.log(subTotal)
 
-      let id = (e.target.dataset.id).split("-")
-
-      new Promise (function(resolve, reject) {
-        resolve( restarSubtotal(id))
-        reject(console.log("Error"))
-
-      })
-      .then(function() {
-        e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${id[1]}"]`))
-        localStorage.removeItem(`producto-${id[1]}`)
-        const getIds = JSON.parse(localStorage.getItem("productoIds"))
-        ids = getIds.filter((elementId) => elementId != Number(id[1]))
-        console.log(ids)
-        localStorage.removeItem("productoIds")
-        ids.length > 0 ?  localStorage.setItem(`productoIds`, JSON.stringify(ids)) : ""
-        
-        mostrarNumeroArticulosHtml()
-        
-      })
-
-      function restarSubtotal (id) {
-        const obtenerCosto = document.querySelector(`[data-id="price-${id[1]}"]`).textContent.split("$")
-        console.log(obtenerCosto)
-        if(obtenerCosto) {
-          const costo = parseInt(obtenerCosto[1])
-          resta = subtotal - costo
-          subTotalHtml.innerHTML = `$${resta}`
-        }
-      }
-    })}
-  }
 
 ///*** FILTROOOOOOOOOOS ***///
 let filtradoHTML = "";
@@ -243,7 +204,7 @@ filtroCategorias.addEventListener("click", (e) => {
   console.log(btns)
   btns.forEach(element => element.addEventListener("click", (e) => {
       console.log(e.target)
-      add(e.target.dataset.id) 
+      agregarProducto(e.target.dataset.id) 
   }));
 });
 
@@ -278,7 +239,7 @@ filtroPrecio.addEventListener("click", (e) => {
     console.log(btns)
     btns.forEach(element => element.addEventListener("click", (e) => {
       console.log(e.target)
-      add(e.target.dataset.id) 
+      agregarProducto(e.target.dataset.id) 
   }));
   } else {
     productList.forEach((elemento) => {
