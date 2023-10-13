@@ -48,7 +48,15 @@ export function createElementHtml (element, classname, content, dataset, src) {
    
     return elementoEtiqueta
 }
-
+function deshabilitarBtnAgregar (id, estado) {
+  let btnAgregarCarrito = document.querySelector(`[data-id="${ id }"]`)
+  btnAgregarCarrito.disabled = true;
+  btnAgregarCarrito.classList.add("disabled")
+  if(estado === false) {
+    btnAgregarCarrito.disabled = false;
+    btnAgregarCarrito.classList.remove("disabled")
+  }
+}
 export function traerIdsLocalStorage (ids) {
   //console.log(ids)
   ids.forEach(id => {
@@ -56,9 +64,7 @@ export function traerIdsLocalStorage (ids) {
       if(data) {
         datosProductosAgregados.push(data)
         // Deshabilitar agregar producto 
-        let btnAgregarCarrito = document.querySelector(`[data-id="${ id }"]`)
-        btnAgregarCarrito.disabled = true;
-        btnAgregarCarrito.classList.add("disabled")
+        deshabilitarBtnAgregar(id)
       }
       else return;
   })
@@ -222,16 +228,16 @@ export function borrarItemCarrito() {
 
       })
       .then(function() {
-        e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${id[1]}"]`))
-        localStorage.removeItem(`producto-${id[1]}`)
+        e.target.parentNode.parentNode.removeChild(document.querySelector(`[data-id="producto-${ id[1] }"]`))
+        localStorage.removeItem(`producto-${ id[1] }`)
         const getIds = JSON.parse(localStorage.getItem("productoIds"))
-        ids = getIds.filter((elementId) => elementId != Number(id[1]))
+        ids = getIds.filter((elementId) => elementId != Number( id[1] ))
         console.log(ids)
         localStorage.removeItem("productoIds")
         ids.length > 0 ?  localStorage.setItem(`productoIds`, JSON.stringify(ids)) : ""
         
         mostrarNumeroArticulosHtml()
-        
+        if(location.pathname === "/tienda.html")  deshabilitarBtnAgregar(id[1], false)
       })
 
       function restarSubtotal (id) {

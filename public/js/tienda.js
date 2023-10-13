@@ -140,10 +140,6 @@ function renderProductosHtml(registros) {
   })
 }
 
-
-///*** BORRAR CARRITOOOOO ***/// QUE ES ESTO
-
-
 ///*** FILTROOOOOOOOOOS ***///
 let filtradoHTML = "";
 const filtroPrecio = document.querySelector("#precio")
@@ -296,3 +292,4 @@ window.onload = async () => {
 
 
 
+console.log(location.pathname)
