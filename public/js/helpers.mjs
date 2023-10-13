@@ -53,7 +53,13 @@ export function traerIdsLocalStorage (ids) {
   //console.log(ids)
   ids.forEach(id => {
       let data = JSON.parse(localStorage.getItem(`producto-${ id }`)) 
-      if(data) datosProductosAgregados.push(data)
+      if(data) {
+        datosProductosAgregados.push(data)
+        // Deshabilitar agregar producto 
+        let btnAgregarCarrito = document.querySelector(`[data-id="${ id }"]`)
+        btnAgregarCarrito.disabled = true;
+        btnAgregarCarrito.classList.add("disabled")
+      }
       else return;
   })
   
@@ -65,8 +71,6 @@ export function mostrarSubtotalPorProducto (producto) {
 }
 
 export function calcularSubTotalProducto(product) {
-  console.log(product)
-
   let subTotalProducto = product.cantidad * product.price
   return subTotalProducto
 }
@@ -78,7 +82,6 @@ export function mostrarSubtotalHtml () {
     for (let index = 0; index < getIds.length; index++) {
       const getProduct = JSON.parse(localStorage.getItem(`producto-${ getIds[index] }`))  
       let precio = calcularSubTotalProducto(getProduct)
-      console.log(precio)
       cuenta += precio
       subTotalHtml.innerHTML = `$${cuenta}`
     }
@@ -97,7 +100,7 @@ export function mostrarNumeroArticulosHtml () {
 export function eventoSumarEnTodos () {
   const inputCarrito = document.querySelectorAll(".input-carrito");
   const btnsSumar = document.querySelectorAll(".sumar")
-
+  console.log("sumar en todos")
   if(btnsSumar) {
     for (let index = 0; index < btnsSumar.length; index++) {
 
@@ -107,7 +110,7 @@ export function eventoSumarEnTodos () {
         let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${ idProducto[1] }`))
         getProductActualizar.cantidad =  Number(inputCarrito[index].value)
         localStorage.setItem(`producto-${idProducto[1] }`, JSON.stringify(getProductActualizar));
-        console.log(getProductActualizar)
+        //console.log(getProductActualizar)
         const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
         const inputPrecio = document.querySelector(`[data-id="price-${ idProducto[1] }"]`).innerHTML = `$${ subTotalProducto }` 
         mostrarSubtotalHtml()
@@ -142,18 +145,28 @@ export function eventoRestarEnTodos () {
 
 
 export function eventoSumar(id) {
+  console.log("individual")
   const mas = document.querySelector(`[data-id="sumar-${ id }"]`)
   console.log(mas)
   mas.addEventListener("click", () => {
+
+    console.log("se dio click en evento sumar individual")
     const input = document.querySelector(`[data-id="input-${ id }"]`)
-    input.value++
-      let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${id}`))
-      getProductActualizar.cantidad =  Number(input.value)
-      localStorage.setItem(`producto-${ id }`, JSON.stringify(getProductActualizar));
-      console.log(getProductActualizar)
-      const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
-      const subTotalPorProducto = document.querySelector(`[data-id="price-${ id }"]`).innerHTML = `$${ subTotalProducto }` 
-      const subTotalTodos = mostrarSubtotalHtml()
+    console.log(input.value)
+    let valorInput = Number(input.value)
+    console.log(valorInput)
+    valorInput++
+    console.log(valorInput)
+
+    let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${id}`))
+    getProductActualizar.cantidad =  valorInput
+    localStorage.removeItem(`producto-${id}`) 
+    localStorage.setItem(`producto-${ id }`, JSON.stringify(getProductActualizar));
+    console.log(getProductActualizar)
+
+    const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
+    const subTotalPorProducto = document.querySelector(`[data-id="price-${ id }"]`).innerHTML = `$${ subTotalProducto }` 
+    const subTotalTodos = mostrarSubtotalHtml()
   })
 }
 
@@ -161,22 +174,30 @@ export function eventoSumar(id) {
 export function eventoRestar(id) {
   const restar = document.querySelector(`[data-id="restar-${ id }"]`)
   restar.addEventListener("click", () => {
+
     const input = document.querySelector(`[data-id="input-${ id }"]`)
-    input.value--
-      let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${id}`))
-      getProductActualizar.cantidad =  Number(input.value)
-      localStorage.setItem(`producto-${ id }`, JSON.stringify(getProductActualizar));
-      console.log(getProductActualizar)
-      const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
-      const subTotalPorProducto = document.querySelector(`[data-id="price-${ id }"]`).innerHTML = `$${ subTotalProducto }` 
-      const subTotalTodos =  mostrarSubtotalHtml()
+    let valorInput = Number(input.value)
+    console.log(valorInput)
+    valorInput--
+
+    let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${id}`))
+    getProductActualizar.cantidad =  valorInput;
+    
+    console.log(getProductActualizar)
+    localStorage.removeItem(`producto-${id}`) 
+    localStorage.setItem(`producto-${ id }`, JSON.stringify(getProductActualizar));
+
+    const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
+    const subTotalPorProducto = document.querySelector(`[data-id="price-${ id }"]`).innerHTML = `$${ subTotalProducto }` 
+    const subTotalTodos =  mostrarSubtotalHtml()
   })
 }
 export function eventoInputCantidad(id) {
   const inputCantidad = document.querySelector(`[data-id="input-${ id }"]`)
   inputCantidad.addEventListener("change", (input) => {
       let getProductActualizar =  JSON.parse(localStorage.getItem(`producto-${id}`))
-      getProductActualizar.cantidad =  Number(input.value)
+      let valorInput = Number(input.value)
+      getProductActualizar.cantidad =  valorInput
       localStorage.setItem(`producto-${ id }`, JSON.stringify(getProductActualizar));
       const subTotalProducto  =  calcularSubTotalProducto(getProductActualizar)
       const subTotalPorProducto = document.querySelector(`[data-id="price-${ id }"]`).innerHTML = `$${ subTotalProducto }` 
@@ -273,6 +294,7 @@ export function htmlCarritoLocalStorage () {
   mostrarSubtotalHtml()
 }
 
+
 export function getProductosLocal() {
   llenarIds();
   
@@ -283,11 +305,6 @@ export function getProductosLocal() {
     .then(function () {
       htmlCarritoLocalStorage()
   })
-  .then(function () {
-    //productoCarrito = document.querySelectorAll(".producto-carrito")
-    console.log(productosCarrito.children)
-    console.log(productosCarrito.children.length)
-    
-})}
+}
 
 

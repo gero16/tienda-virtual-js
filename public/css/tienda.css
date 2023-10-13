@@ -338,6 +338,14 @@ input[type=range]::-ms-fill-upper {
   width: 90%;
 }
 
+.producto:hover .disabled {
+  background-color:#545557;
+
+}
+.disabled {
+  background-color: #545557;
+}
+
 /* Hacelo escalado sino no funciona PELOTUDO */
 @media (max-width: 619px) {
   .productos {
@@ -456,3 +464,4 @@ input[type=range]::-ms-fill-upper {
  
   
 }
+

@@ -74,7 +74,13 @@ function agregarProducto(productId, price) {
   const getIds = JSON.parse(localStorage.getItem("productoIds"))
   if(getIds) ids = getIds
 
+  let btnAgregarCarrito = document.querySelector(`[data-id="${ productId }"]`)
+  btnAgregarCarrito.disabled = true
+  btnAgregarCarrito.classList.add("disabled")
+ 
+  /*
   if(getProductActualizar) {
+
     getProductActualizar.stock--
     getProductActualizar.cantidad++
     localStorage.removeItem(`producto-${productId}`) 
@@ -83,6 +89,7 @@ function agregarProducto(productId, price) {
     mostrarSubtotalPorProducto(getProductActualizar)
     const inputCantidad =  document.querySelector(`[data-id="input-${ productId }"]`).value = getProductActualizar.cantidad
   } 
+  */
 
   if(!getProductActualizar) {
     // Si hay otras id de otros productos
@@ -98,9 +105,11 @@ function agregarProducto(productId, price) {
   }
 
   
-  eventoRestar(productId)
-  eventoSumar(productId)
-  eventoInputCantidad(productId)
+  eventoSumarEnTodos()
+  eventoRestarEnTodos()
+  //eventoRestar(productId)
+  //eventoSumar(productId)
+  //eventoInputCantidad(productId)
   mostrarNumeroArticulosHtml()
   borrarItemCarrito()
   mostrarSubtotalHtml()
