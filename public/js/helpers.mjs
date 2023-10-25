@@ -48,6 +48,7 @@ export function createElementHtml (element, classname, content, dataset, src) {
    
     return elementoEtiqueta
 }
+
 function deshabilitarBtnAgregar (id, estado) {
   let btnAgregarCarrito = document.querySelector(`[data-id="${ id }"]`)
   btnAgregarCarrito.disabled = true;

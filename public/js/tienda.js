@@ -37,6 +37,7 @@ ocultarCarrito.addEventListener('click', () => {
 ///***  Crear el HTML del Carrito ***///
 function addCarritoHTML(product, subtotal) {
   let { image, name, price, id, cantidad } = product
+  console.log(product)
 
   // Caja Producto
   const imgCarrito = createElementHtml("img", ["img-comprar"], "", "", image)
