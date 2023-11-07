@@ -61,13 +61,12 @@ const productosPost = async (req, res) => {
 
   console.log(`Esto es el ids ${ids}`)
 
-  // Recorrer el arreglo de ids para encontrar coincidencia en la BD y restar Stock
   ids.forEach((id) => {
-    console.log(colors.bgGreen(id))
+    console.log(colors.bgGreen(id.cantidad))
 
-    const productAct = registros.find((p) => p.id === id[0])
-    productAct.cantidad = id[1]
-    //console.log(colors.bgRed(productAct))
+    const productAct = registros.find((p) => p.id === id.id)
+    console.log(colors.bgRed(productAct))
+    productAct.cantidad = id.cantidad
     
    //productAct.cantidad = id[1]
     console.log(`Este es el product Act ${productAct}`)
@@ -80,40 +79,19 @@ const productosPost = async (req, res) => {
     })
 
     const idMongo = productAct._id.valueOf()
-    console.log(idMongo)
-
-  })
-
-
-    // Traer el _id de la base y eliminarlo - Para agregar el producto actualizado
+   
     const actualizarStock = async () => {
       try {
-        //
-        await Producto.findByIdAndDelete(idMongo)
-
-        const { name, price, image, stock, category, cantidad } = productAct
-        const productoNuevo = new Producto({
-          id,
-          name,
-          price,
-          image,
-          stock,
-          category,
-          cantidad,
-        })
-        console.log(productoNuevo)
-
-        //  FUNCIONO CARAJOOOOOOOOO!!!!
-        await productoNuevo.save()
-        console.log('gato')
+        productAct.cantidad = 0
+        await Producto.findByIdAndUpdate(idMongo, productAct)
+        console.log('Producto actualizado!')
       } catch (err) {
-        console.log(err)
+        console.error('Error al buscar el producto:', err);
       }
     }
-    // [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
-    actualizarStock() // Ejecutandolo fuera del forEach me tiraba ese error
-  
 
+    actualizarStock()  
+  })
 
   const mpPreferencias = async () => {
     // LLamar a mercado pago y mandarle las preferencias

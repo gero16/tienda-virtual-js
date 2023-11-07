@@ -11,6 +11,10 @@ let productoIds = [];
 let datosProductosAgregados = []
 let productosComprar = ""
 
+let datoProducto = {id : 0, cantidad : 0}
+
+let datosProductos = []
+
 window.onload = async () => {
   checkoutHTML();
   
@@ -25,7 +29,7 @@ window.onload = async () => {
 
 };
 
-let ids = []
+//let ids = []
 
 function checkoutHTML(products) {
   let pedidoHTML = "";
@@ -41,8 +45,11 @@ function checkoutHTML(products) {
     subTotal =  price * cantidad
     sumaSubTotal = sumaSubTotal + price * cantidad;
     total = sumaSubTotal + envio
-    const idsCantidad = [id, cantidad]
-    ids.push(idsCantidad)
+  
+    //const idsCantidad = [id, cantidad]
+    datoProducto = {id : id, cantidad : cantidad}
+    datosProductos.push(datoProducto)
+
     pedidoHTML += `
       <div class="producto-pedido">
         <img class="imagen-pedido" src="${image}" alt="foto-${name}" />
@@ -93,7 +100,6 @@ function checkoutHTML(products) {
     divTotalPedido.append(divPromo, ulTotal);
     divPedido.append(divTotalPedido);
 
-    console.log(ids);
   });
   
 
@@ -113,7 +119,7 @@ async function pay() {
   };
 
   try {
-    const data = [shipping, ids];
+    const data = [shipping, datosProductos];
     const preference = await (
       await fetch("/api/pay", {
         method: "POST",

@@ -99,6 +99,7 @@ function agregarProducto(productId, price) {
     product.cantidad = 1
     order.items.push(product)
     productoLocalStorage = product;
+    /******* PORQUE AGREGO productoLocalStorage y no directamente product ********/
     localStorage.setItem(`producto-${productId}`, JSON.stringify(productoLocalStorage));
     localStorage.setItem(`productoIds`, JSON.stringify(ids));
 
