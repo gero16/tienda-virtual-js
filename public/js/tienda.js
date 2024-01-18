@@ -265,7 +265,7 @@ filtroPrecio.addEventListener("click", (e) => {
         productosHTML.append(divProducto)
       } 
       let mostrarPrecio = document.querySelector("#mostrar-precio")
-      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 4000` 
+      mostrarPrecio.textContent = `$ ${ precioPrincipal }` 
     });
     const btns = document.querySelectorAll(".add")
     console.log(btns)

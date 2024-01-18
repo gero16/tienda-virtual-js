@@ -1,4 +1,8 @@
 /** Orden de Pago para el Cliente **/
+
+header {
+  background-color: #1a1919;
+}
 .order {
   position: absolute;
   top: 150px;
