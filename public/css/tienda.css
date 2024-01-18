@@ -2,15 +2,9 @@
 
 .header {
   z-index: 90;
-  height: 100px;
   position: fixed;
   top: 0;
-  /*
-    background-image: url('../img/fondo.jpg');
-    background-position: 30% 100%;
-     
-      */
-      background-color: rgb(29, 28, 28);
+  background-color: rgb(29, 28, 28);
   width: 100%;
 }
 
@@ -84,7 +78,7 @@
 
 #mostrar-precio {
   margin-bottom: 5px;
-  font-size: medium;
+  font-size: large;
 }
 
 .filtro-precio-select {
@@ -213,7 +207,7 @@
   color: black;
   background-color: white;
   border-radius: 10px;
-  margin: 0px auto 20px auto;
+  margin: 0px auto 0px auto;
   width: 200px;
   height: 355px;
   transition: 0.5s;
