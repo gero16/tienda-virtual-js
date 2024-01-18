@@ -10,7 +10,7 @@
     background-position: 30% 100%;
      
       */
-  background-color: #1a1919;
+      background-color: rgb(29, 28, 28);
   width: 100%;
 }
 
@@ -70,7 +70,9 @@
   margin: 0px 0px 10px 0px;
 
 }
-
+.precios {
+  margin-bottom: 5px;
+}
 .precio-principal {
   padding: 5px;
 }
@@ -158,8 +160,9 @@
 }
 
 .filtro-categorias {
-  margin: 15px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
   font-family: "Rubik", sans-serif;
+  padding: 5px;
 }
 
 .titulo-categoria {
@@ -169,17 +172,19 @@
 
 .categoria-filtro {
   font-weight: 400;
-  margin: 0px 0px 0px 2px;
-  font-size: large;
+  margin: 15px 0px 0px 2px;
+  font-size: medium;
+  border: 1px solid rgb(187, 183, 183)
+
 }
 
 .filtro-categorias {
-  padding: 15px 5px 15px 5px;
+
   margin-bottom: 5px;
 }
 .filtro-categorias p {
   padding: 15px 5px 15px 5px;
-  margin-bottom: 5px;
+ 
 }
 
 .filtro-categorias p:hover {
@@ -279,68 +284,36 @@
   transform: scale(1.2);
 }
 
-
-input[type='range'],
-input[type='range']::-webkit-slider-runnable-track,
-input[type='range']::-webkit-slider-thumb {
+.input-precio {
   -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
-input[type=range]::-webkit-slider-thumb {
-  background-color: #005CC8;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  margin-top: -9px;
-}
-
-input[type=range]::-moz-range-thumb {
-  background-color: #777;
-  width: 15px;
-  height: 15px;
-  border: 3px solid #333;
-  border-radius: 50%;
-}
-
-input[type=range]::-ms-thumb {
-  background-color: #777;
+.input-precio::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
   width: 20px;
   height: 20px;
-  border: 3px solid #333;
+  border-radius: 50%; 
+  background: #0483aa;
+  cursor: pointer;
+}
+
+.input-precio::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
+  background: #04AA6D;
+  cursor: pointer;
 }
 
-input[type=range]::-webkit-slider-runnable-track {
-  background-color: #c7c5c5;
-  border-radius: 5px;
-  height: 6px;
-}
-
-input[type=range]:focus::-webkit-slider-runnable-track {
-  outline: none;
-}
-
-input[type=range]::-moz-range-track {
-  background-color: #777;
-  height: 3px;
-}
-
-input[type=range]::-ms-track {
-  background-color: #777;
-  height: 3px;
-}
-
-input[type=range]::-ms-fill-lower {
-  background-color: HotPink
-}
-
-input[type=range]::-ms-fill-upper {
-  background-color: black;
-} 
-
-.input-precio {
-  width: 90%;
-}
 
 .producto:hover .disabled {
   background-color:#545557;
