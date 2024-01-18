@@ -12,7 +12,6 @@ let datosProductosAgregados = []
 let productosComprar = ""
 
 let datoProducto = {id : 0, cantidad : 0}
-
 let datosProductos = []
 
 window.onload = async () => {
