@@ -78,19 +78,6 @@ function agregarProducto(productId, price) {
   let btnAgregarCarrito = document.querySelector(`[data-id="${ productId }"]`)
   btnAgregarCarrito.disabled = true
   btnAgregarCarrito.classList.add("disabled")
- 
-  /*
-  if(getProductActualizar) {
-
-    getProductActualizar.stock--
-    getProductActualizar.cantidad++
-    localStorage.removeItem(`producto-${productId}`) 
-    localStorage.setItem(`producto-${productId}`, JSON.stringify(getProductActualizar));
-
-    mostrarSubtotalPorProducto(getProductActualizar)
-    const inputCantidad =  document.querySelector(`[data-id="input-${ productId }"]`).value = getProductActualizar.cantidad
-  } 
-  */
 
   if(!getProductActualizar) {
     // Si hay otras id de otros productos
@@ -149,10 +136,7 @@ let mostrarPrecio = document.querySelector("#mostrar-precio")
 const filtroCategorias = document.querySelector(".filtro-categorias")
 
 filtroCategorias.addEventListener("click", (e) => {
-  console.log(Number(filtroPrecio.value))
-    // Es tan rapido que no puedo manejarlo 
-  const preloader = document.querySelector(".preloader")
-  //preloader.style.display = "block";
+  //console.log(Number(filtroPrecio.value))
 
   productosHTML.innerHTML = " ";
   filtradoHTML = "";
@@ -160,12 +144,11 @@ filtroCategorias.addEventListener("click", (e) => {
   let nameCategoria = e.target.id;
   
   const previousSelected = document.querySelector(".seleccionado")
-  //console.log(previousSelected)
 
   if(previousSelected) {
     previousSelected.classList.toggle("seleccionado")
     e.target.classList.toggle("seleccionado")
-    console.log(e.target.id)
+    //console.log(e.target.id)
   } else {
     e.target.classList.toggle("seleccionado")
   }
@@ -174,13 +157,23 @@ filtroCategorias.addEventListener("click", (e) => {
     previousSelected.classList.remove("seleccionado")
   }
 
-  
+  console.log(productList)
   productList.forEach((elemento) => {
-    //let { name, image, id, category, price } = elemento;
     let { name, image, id, category, price } = elemento;
 
+    if(nameCategoria === "mostrar-todo") {
+      const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
+      const img = createElementHtml("img", [], "", "", image)
+      const nombre = createElementHtml("p", [], name)
+      const precio = createElementHtml("p", [], `$${ price }`)
+      const button = createElementHtml("button", ["add"], "Agregar Carrito", id)
+      
+      divProducto.append(img, nombre, precio, button)
+      productosHTML.append(divProducto)
+    }
+
     if (category == nameCategoria && price >= Number(filtroPrecio.value)) {
-      console.log(elemento)
+      //console.log(elemento)
       const divProducto = createElementHtml("div", ["producto", "centrar-texto"])
       const img = createElementHtml("img", [], "", "", image)
       const nombre = createElementHtml("p", [], name)
@@ -190,21 +183,8 @@ filtroCategorias.addEventListener("click", (e) => {
       divProducto.append(img, nombre, precio, button)
       productosHTML.append(divProducto)
   
-      /*
-      
-      filtradoHTML += `
-      <div class="producto producto-filtrado centrar-texto">
-        <img src="${image}" alt="Mochila" />
-        <p class="nombre">${name}</p>
-        <p class="precio">$${price}</p>
-        <button class="add" onclick="add(${id})" >Agregar Carrito</button>
-      </div>
-      `;
-      */
     }
     
-    //preloader.style.display = "none";
-    //productosHTML.innerHTML = filtradoHTML;
   });
   
   const btns = document.querySelectorAll(".add")
@@ -223,6 +203,7 @@ filtroPrecio.addEventListener("click", (e) => {
 
   const selectedCategory = document.querySelector(".seleccionado")
   if(selectedCategory) {
+ 
     productList.forEach((elemento) => {
       let { price, category } = elemento;    
       if(precioPrincipal < price && category == selectedCategory.id) {
@@ -238,8 +219,8 @@ filtroPrecio.addEventListener("click", (e) => {
       } 
 
       let mostrarPrecio = document.querySelector("#mostrar-precio")
-      mostrarPrecio.textContent = `$ ${ precioPrincipal } - $ 1500` 
-      //productosHTML.innerHTML = filtradoHTML;
+      mostrarPrecio.textContent = `$ ${ precioPrincipal }` 
+      productosHTML.innerHTML = filtradoHTML;
     });
     
     const btns = document.querySelectorAll(".add")

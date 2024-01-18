@@ -213,8 +213,8 @@
   color: black;
   background-color: white;
   border-radius: 10px;
-  margin: 0px auto 5px auto;
-  width: 180px;
+  margin: 0px auto 20px auto;
+  width: 200px;
   height: 355px;
   transition: 0.5s;
 }
@@ -403,7 +403,7 @@
 
 @media (min-width: 1300px) {
   .producto {
-    width: 170px;
+    width: 200px;
     height: 315px;
   }
   
